@@ -4,20 +4,20 @@ from pyzbar.pyzbar import decode
 capture = cv2.VideoCapture(0)
 capture.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
 capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
-detector = cv2.QRCodeDetector()
 
 r = None
 while cv2.waitKey(33) < 0:
     ret, frame = capture.read()
-    cv2.imshow('',frame)
+    # cv2.imshow('',frame)
     decoded_data = decode(frame)
     if not len(decoded_data) == 0:
         r = str(decoded_data[0][0])
         break
 
+r = str(r).split("'")[1]
 r = r.split(";") #분리용
 wifi_data = {}
-r.pop()
+r.pop();r.pop()
 for i in r:
     i = i.split(":")
     wifi_data[i[-2]] = i[-1]
@@ -33,7 +33,7 @@ if not 'NONE' in wifi_data['T']:
     key_mgmt = '\n\tkey_mgmt='+wifi_data['T']+'-PSK'
 
 Network_Obj = '{'+ssid+psk+key_mgmt+'\n}\n\n'
-print(Network_Obj)
+print("network="+Network_Obj)
 
 exists = False
 
