@@ -15,7 +15,7 @@ while cv2.waitKey(33) < 0:
         break
 
 r = str(r).split("'")[1]
-r = r.split(";") #분리용
+r = r.split(";") 
 wifi_data = {}
 r.pop();r.pop()
 for i in r:
