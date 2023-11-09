@@ -1,4 +1,5 @@
 import cv2
+from pyzbar.pyzbar import decode
 
 capture = cv2.VideoCapture(0)
 capture.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
@@ -9,18 +10,10 @@ r = None
 while cv2.waitKey(33) < 0:
     ret, frame = capture.read()
     cv2.imshow('',frame)
-    if ret:
-        retval, points_set, qrcode = detector.detectAndDecode(frame)
-        if len(retval)>0:
-            print(retval)
-            r = retval
-            break
-        key = cv2.waitKey(100)
-        print(key)
-        if key == ord('q'):
-            break
-        if key ==ord('c'):
-            cv2.imwrite('test.jpg'. frame)
+    decoded_data = decode(frame)
+    if not len(decoded_data) == 0:
+        r = str(decoded_data[0][0])
+        break
 
 r = r.split(";") #분리용
 wifi_data = {}
