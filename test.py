@@ -1,5 +1,5 @@
 data = "WIFI:T:WPA;S:micro_2_5G;P:#gsm_micro@;H:false;"
-# data = 'WIFI:T:NONE;S:Ganggggg;P:H:true;'
+data = 'WIFI:T:NONE;S:Ganggggg;P:H:true;'
 r = data.split(";")
 wifi_data = {}
 r.pop()
@@ -17,7 +17,7 @@ ssid = '\n\tssid="'+wifi_data['S']+'"'
 if not 'NONE' in wifi_data['T']:
     key_mgmt = '\n\tkey_mgmt='+wifi_data['T']+'-PSK'
 
-Network_Obj = '{'+ssid+psk+key_mgmt+'\n}\n'
+Network_Obj = '{'+ssid+psk+key_mgmt+'\n}\n\n'
 print(Network_Obj)
 
 exists = False
@@ -28,10 +28,11 @@ with open("/etc/wpa_supplicant/wpa_supplicant.conf", 'r') as wpa_supplicant:
     for network in datas:
         if(network == Network_Obj):
             exists = True
-
+  
 if not exists:
     with open("/etc/wpa_supplicant/wpa_supplicant.conf", 'a') as wpa_supplicant:
-        datas = wpa_supplicant.writable()
-        print(datas)
+        wpa_supplicant.writelines(['\nnetwork=',Network_Obj])
+        wpa_supplicant.close()
+        print('성공적으로 네트워크를 등록했습니다')
 else:
     print("이미 존재하는 네트워크 입니다.")
