@@ -1,4 +1,6 @@
 import cv2
+import os
+import time
 from pyzbar.pyzbar import decode
 
 capture = cv2.VideoCapture(0)
@@ -49,6 +51,10 @@ if not exists:
         wpa_supplicant.writelines(['\nnetwork=',Network_Obj])
         wpa_supplicant.close()
         print('성공적으로 네트워크를 등록했습니다')
+        for sec in [3,2,1]:
+            print("리부트까지 {0}초 남음".format(sec))
+            time.sleep(1)
+        os.system("reboot")
 else:
     print("이미 존재하는 네트워크 입니다.")
 
