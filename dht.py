@@ -6,7 +6,6 @@ import board
 import adafruit_dht
 
 dhtDevice = adafruit_dht.DHT11(board.D4)
-print(dhtDevice._temperature)
 
 # you can pass DHT22 use_pulseio=False if you wouldn't like to use pulseio.
 # This may be necessary on a Linux single board computer like the Raspberry Pi,
@@ -33,4 +32,4 @@ while True:
         dhtDevice.exit()
         raise error
 
-    time.sleep(2.0)
+    time.sleep(1.0)
