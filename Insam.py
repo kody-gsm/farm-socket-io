@@ -19,15 +19,15 @@ async def main():
         display.lcd_display_extended_string("Enabled",2)
         while True:
             dht_task = asyncio.create_task(Dht()) #맨 마지막
-            dht_task = asyncio.create_task(Dht())
-            temp, hum=await dht_task
-            if temp and hum:
-                print(temp,hum)
-                display.lcd_clear()
-                display.lcd_display_extended_string("temp: {}C".format(temp),1)
-                display.lcd_display_extended_string("hum: {}%".format(hum),2)
-                time.sleep(0.5)
-            else:
+            try:
+                temp, hum=await dht_task
+                if temp and hum:
+                    print(temp,hum)
+                    display.lcd_clear()
+                    display.lcd_display_extended_string("temp: {}C".format(temp),1)
+                    display.lcd_display_extended_string("hum: {}%".format(hum),2)
+                    time.sleep(0.3)
+            except:
                 time.sleep(2.0)
     else:
         qr.ResgistNetwork()
