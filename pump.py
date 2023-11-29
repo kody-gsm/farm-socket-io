@@ -38,6 +38,7 @@ def setPinConfig(EN, INA, INB):
     pwm = GPIO.PWM(EN, 100) 
     # 우선 PWM 멈춤.   
     pwm.start(0) 
+    print(1)
     return pwm
 
 # 모터 제어 함수
@@ -45,7 +46,7 @@ def setMotorContorl(pwm, INA, INB, speed, stat):
 
     #모터 속도 제어 PWM
     pwm.ChangeDutyCycle(speed)  
-    
+    print(3)
     if stat == FORWARD:
         GPIO.output(INA, HIGH)
         GPIO.output(INB, LOW)
@@ -65,6 +66,7 @@ def setMotorContorl(pwm, INA, INB, speed, stat):
 def setMotor(ch, speed, stat):
     if ch == CH1:
         #pwmA는 핀 설정 후 pwm 핸들을 리턴 받은 값이다.
+        print(2)
         setMotorContorl(pwmA, IN1, IN2, speed, stat)
     # else:
         #pwmB는 핀 설정 후 pwm 핸들을 리턴 받은 값이다.

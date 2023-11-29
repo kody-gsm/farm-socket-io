@@ -1,6 +1,6 @@
 import qr
 from dht import Dht
-from soil import ReadSoilHumi
+# from soil import ReadSoilHumi
 import os
 import drivers
 import time
@@ -20,19 +20,19 @@ async def main():
         display.lcd_display_extended_string("Network is",1)
         display.lcd_display_extended_string("Enabled",2)
         while True:
-            soil_humi_task = asyncio.create_task(ReadSoilHumi())
+            # soil_humi_task = asyncio.create_task(ReadSoilHumi())
             dht_task = asyncio.create_task(Dht()) #맨 마지막
             try:
                 temp, hum=await dht_task
-                soil_humi = await soil_humi_task
+                # soil_humi = await soil_humi_task
                 if temp and hum:
                     print(temp,hum)
                     display.lcd_clear()
                     display.lcd_display_extended_string("temp: {}C".format(temp),1)
                     display.lcd_display_extended_string("hum: {}%".format(hum),2)
                     time.sleep(0.3)
-                if soil_humi != "ERROR":
-                    print(soil_humi,"%")
+                # if soil_humi != "ERROR":
+                #     print(soil_humi,"%")
             except:
                 time.sleep(2.0)
     else:

@@ -22,14 +22,14 @@ def readChannel(channel):
 def convertPercent(data):
   return 100.0-round(((data*100)/float(1023)),1)
 
-try:
-  while True:
+def soil_hemi():
+  try:
     val = readChannel(0)
     if (val != 0) : # filtering for meaningless num
       print(val, "/", math.ceil(convertPercent(val)*100)/100,"%")
     else:
       print('err')
     time.sleep(delay)
-except KeyboardInterrupt:
-  spi.close()
-  print("Keyboard Interrupt!!!!")
+  except KeyboardInterrupt:
+    spi.close()
+    print("Keyboard Interrupt!!!!")

@@ -3,31 +3,50 @@ import asyncio
 import websockets
 import sys
 from websockets.exceptions import ConnectionClosedError
+import asyncio
+import time
 
-ROOM_ID = '김철중'
+USER_NAME = '미안하다'
 
-async def connect_to_websocket():
-    url = f"wss://port-0-websocket-1igmo82cloo8459k.sel5.cloudtype.app/ws/chat/{ROOM_ID}/"
-    # url/event/{ROOM_ID}
+BACKEND_URL = 'port-0-websocket-1igmo82cloo8459k.sel5.cloudtype.app'
+LOCAL_URL = '127.0.0.1:8000'
+
+async def handle_input():
+    loop = asyncio.get_event_loop()
+    return await loop.run_in_executor(None, input, " ")
+
+async def ws_send(ws):
+        message = {'message' : "Hello, WebSocket"}
+        await ws.send(json.dumps(message))
+        await asyncio.sleep(0.2)
+        while True: 
+            text = await handle_input()
+            if text:
+                message = {'message' : text}
+                text = False
+                await ws.send(json.dumps(message))
+                await asyncio.sleep(0.2)
+
+
+async def ws_recv(ws):
+    while True:
+        response_text_data = await ws.recv()
+        if response_text_data != False:
+            response = json.loads(response_text_data)
+            print(response)
+            response_text_data = False
+
+
+async def main():
+    url = f"wss://{BACKEND_URL}/ws/chat/dksl/{USER_NAME}/"
     print(url)
     try:
-        async with websockets.connect(url) as websocket:
-            message = {'message' : "Hello, WebSocket"}
-            await websocket.send(json.dumps(message))
-            text = False
-            while True:
-                if text:
-                    text = text.split('\n')[0]
-                    message = {'message' : text}
-                    text = False
-                    await websocket.send(json.dumps(message))
-                response_text_data = await websocket.recv()
-                response = json.loads(response_text_data)
-                print(response)
+        async with websockets.connect(url, ping_interval=60) as websocket:
 
-                
+            await asyncio.gather(ws_recv(websocket), ws_send(websocket))
 
     except ConnectionClosedError as e:
         print(f"WebSocket connection closed unexpectedly: {e}")
 
-asyncio.run(connect_to_websocket())
+
+asyncio.run(main())
