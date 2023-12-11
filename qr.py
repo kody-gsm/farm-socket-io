@@ -11,8 +11,8 @@ def ResgistNetwork():
 
     display = drivers.Lcd()
     display.lcd_clear()
-    display.lcd_display_extended_string("Ready to",1)
-    display.lcd_display_extended_string("Regist Network",2)
+    display.lcd_display_extended_string("Ready to regist",1)
+    display.lcd_display_extended_string("Network with QR",2)
     r = None
     while cv2.waitKey(33) < 0:
         ret, frame = capture.read()
@@ -71,4 +71,3 @@ def ResgistNetwork():
         display.lcd_display_string("Network", 2)
 
     cv2.destroyAllWindows()
-
