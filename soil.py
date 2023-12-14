@@ -33,3 +33,6 @@ def soil_hemi():
   except KeyboardInterrupt:
     spi.close()
     print("Keyboard Interrupt!!!!")
+
+while True:
+  soil_hemi()

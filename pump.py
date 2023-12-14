@@ -23,11 +23,11 @@ LOW = 0
 
 # 실제 핀 정의
 #PWM PIN
-ENA = 13  #37 pin
+ENA = 25  #37 pin
 
 #GPIO PIN
-IN1 = 6  #37 pin
-IN2 = 5  #35 pin
+IN1 = 23  #37 pin
+IN2 = 24  #35 pin
 
 # 핀 설정 함수
 def setPinConfig(EN, INA, INB):        

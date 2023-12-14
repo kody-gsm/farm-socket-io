@@ -7,4 +7,4 @@ d10=board.D10
 led = digitalio.DigitalInOut(d10)
 led.direction = digitalio.Direction.OUTPUT
 
-led.value = True
+led.value = False
