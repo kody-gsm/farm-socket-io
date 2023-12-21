@@ -16,7 +16,7 @@ def ResgistNetwork():
     r = None
     while cv2.waitKey(33) < 0:
         ret, frame = capture.read()
-        # cv2.imshow('',frame)
+        # cv2.imshow('qr',frame)
         decoded_data = decode(frame)
         if not len(decoded_data) == 0:
             r = str(decoded_data[0][0])

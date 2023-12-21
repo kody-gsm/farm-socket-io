@@ -84,16 +84,16 @@ pwmA = setPinConfig(ENA, IN1, IN2)
 #제어 시작
 
 # 앞으로 80프로 속도로
-setMotor(CH1, 80, FORWARD)
+setMotor(CH1, 20, FORWARD)
 #5초 대기
 sleep(5)
 
 # 뒤로 40프로 속도로
-setMotor(CH1, 40, BACKWORD)
+# setMotor(CH1, 40, BACKWORD)
 sleep(5)
 
 # 뒤로 100프로 속도로
-setMotor(CH1, 100, BACKWORD)
+# setMotor(CH1, 100, BACKWORD)
 sleep(5)
 
 #정지 
