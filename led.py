@@ -1,10 +1,12 @@
-import board
-import digitalio
+import RPi.GPIO as GPIO
+from time import sleep
 
-# Initial the dht device, with data pin connected to:
+GPIO.setmode(GPIO.BCM)
 
-d10=board.D10
-led = digitalio.DigitalInOut(d10)
-led.direction = digitalio.Direction.OUTPUT
+GPIO.setup(14, GPIO.OUT)
 
-led.value = False
+while True:
+    GPIO.output(14, 1)
+    sleep(1)
+    GPIO.output(14, 0)
+    sleep(1)
