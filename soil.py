@@ -8,7 +8,7 @@ delay = 1
 # SPI 버스 0과 디바이스 0을 열고
 # 최대 전송 속도를 1MHz로 설정
 spi = spidev.SpiDev()
-spi.open(0,0) # open(bus, device)
+spi.open(1,0) # open(bus, device)
 spi.max_speed_hz = 1000000 # set transfer speed
 
 # To read SPI data from MCP3008 chip
@@ -24,7 +24,7 @@ def convertPercent(data):
 
 def soil_hemi():
   try:
-    val = readChannel(0)
+    val = readChannel(1)
     if (val != 0) : # filtering for meaningless num
       print(val, "/", math.ceil(convertPercent(val)*100)/100,"%")
     else:

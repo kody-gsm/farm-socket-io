@@ -1,8 +1,10 @@
 import spidev
 import time
 import math
+import drivers
 
-delay = 0.1
+delay = 1
+display=drivers.Lcd()
 
 # Open Spi Bus
 # SPI 버스 0과 디바이스 0을 열고
@@ -21,19 +23,24 @@ def readChannel(channel):
 
 # 0~1023 value가 들어옴. 1023이 수분함량 min값
 def convertPercent(data):
-  return (100.0-round(((data*100)/float(1023)),1))*2
+  return (100.0-round(((data*100)/float(1023)),1))
 
-def soil_hemi():
+def water_level():
   try:
     val = readChannel(0)
     if (val != 0) : # filtering for meaningless num
-      print(val, "/", math.ceil(convertPercent(val)*100)/100,"%")
+      converted = math.ceil(convertPercent(val)*100)/100
+      print(val, "/", converted,"%")
+      display.lcd_clear()
+      display.lcd_display_extended_string("Water Level:",1)
+      display.lcd_display_extended_string(str(converted),2)
     else:
       print('err')
     time.sleep(delay)
   except KeyboardInterrupt:
     spi.close()
     print("Keyboard Interrupt!!!!")
+    
 
 while True:
-  soil_hemi()
+  water_level()
