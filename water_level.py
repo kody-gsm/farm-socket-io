@@ -3,7 +3,7 @@ import time
 import math
 import drivers
 
-delay = 1
+delay = 0.5
 display=drivers.Lcd()
 
 # Open Spi Bus

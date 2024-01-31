@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: MIT
 
 import time
+import asyncio
 import board
 import adafruit_dht
 
@@ -25,3 +26,11 @@ async def Dht():
     except Exception as error:
         dhtDevice.exit()
         raise error
+
+async def main():           
+    dht_task = asyncio.create_task(Dht()) #맨 마지막
+    temp, hum=await dht_task
+    print(temp, hum)
+
+while True:
+    asyncio.run(main())

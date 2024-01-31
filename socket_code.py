@@ -6,10 +6,9 @@ from websockets.exceptions import ConnectionClosedError
 import asyncio
 import time
 
-USER_NAME = '미안하다'
+USER_NAME = '1234'
 
-BACKEND_URL = 'port-0-websocket-1igmo82cloo8459k.sel5.cloudtype.app'
-LOCAL_URL = '127.0.0.1:8000'
+BACKEND_URL = '192.168.1.4:8000'
 
 async def handle_input():
     loop = asyncio.get_event_loop()
@@ -31,6 +30,7 @@ async def ws_send(ws):
 async def ws_recv(ws):
     while True:
         response_text_data = await ws.recv()
+        print(response_text_data)
         if response_text_data != False:
             response = json.loads(response_text_data)
             print(response)
@@ -38,11 +38,10 @@ async def ws_recv(ws):
 
 
 async def main():
-    url = f"wss://{BACKEND_URL}/ws/chat/dksl/{USER_NAME}/"
+    url = f"ws://{BACKEND_URL}/ws/{USER_NAME}"
     print(url)
     try:
         async with websockets.connect(url, ping_interval=60) as websocket:
-
             await asyncio.gather(ws_recv(websocket), ws_send(websocket))
 
     except ConnectionClosedError as e:
