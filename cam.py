@@ -1,19 +1,30 @@
-import socket
+import websockets
 import cv2
+import base64
+import asyncio
 
 server = ''
 port = ''
 
-soc =socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-cam = cv2.VideoCapture(0)
-cam.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
-cam.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+async def capture():
+    cam = cv2.VideoCapture(0)
+    cam.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+    cam.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
 
-while cv2.waitKey(33) < 0:
+    while cv2.waitKey(33) < 0:
+        ret,frame  =cam.read()
+        if not ret:
+            break
+        cv2.imshow('cam',frame)
 
-    ret,frame  =cam.read()
-    cv2.imshow('cam',frame)
+        _, img_en = cv2.imencode('.jpg', frame)
+        img_64 =base64.b64decode(img_en)
+        # img_str = img_64.decode('utf-8')
 
-    d =frame.flatten()
-    s=d.tostring()
+        # await websockets.send(img_str)
+    cam.release()
+
+
+if __name__== '__main__':
+    asyncio.run(capture())
