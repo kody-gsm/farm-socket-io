@@ -28,8 +28,8 @@ async def capture(ws):
         print(img_str[:20])
         message ={'type':'image','message':img_str}
         await ws.send(json.dumps(message))
-    except:
-        print("cam err")
+    except Exception as e:
+        print(e)
     cam.release()
 
 async def main():
@@ -39,6 +39,8 @@ async def main():
         async with websockets.connect(url, ping_interval=None) as websocket:
             for ii in range(100):
                 print(ii)
+                if not websocket.open:
+                    return
                 await asyncio.gather(capture(websocket))
 
     except ConnectionClosedError as e:
