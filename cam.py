@@ -16,25 +16,29 @@ async def capture(ws):
     cam.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
     cam.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
 
-    ret,frame  =cam.read()
-    if not ret:
-        return
-    cv2.imshow('cam',frame)
+    try:
+        ret,frame  =cam.read()
+        if not ret:
+            return
+        # cv2.imshow('cam',frame)
 
-    _, img_en = cv2.imencode('.jpg', frame)
-    img_64 =base64.b64encode(img_en)
-    img_str = img_64.decode('utf-8')
-    print(len(img_str))
-    message ={'type':'image','message':img_str}
-    await ws.send(json.dumps(message))
+        _, img_en = cv2.imencode('.jpg', frame)
+        img_64 =base64.b64encode(img_en)
+        img_str = img_64.decode('utf-8')
+        print(img_str[:20])
+        message ={'type':'image','message':img_str}
+        await ws.send(json.dumps(message))
+    except:
+        print("cam err")
     cam.release()
 
 async def main():
     url = f"ws://{BACKEND_URL}/ws/{USER_NAME}"
     print(url)
     try:
-        async with websockets.connect(url, ping_interval=60) as websocket:
-            for ii in range(5):
+        async with websockets.connect(url, ping_interval=None) as websocket:
+            for ii in range(100):
+                print(ii)
                 await asyncio.gather(capture(websocket))
 
     except ConnectionClosedError as e:
