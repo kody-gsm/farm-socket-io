@@ -8,7 +8,7 @@ import time
 
 USER_NAME = '1234'
 
-BACKEND_URL = '192.168.1.4:8000'
+BACKEND_URL = '192.168.1.5:8000'
 
 async def handle_input():
     loop = asyncio.get_event_loop()
