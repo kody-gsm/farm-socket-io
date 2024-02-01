@@ -1,2 +1,3 @@
-class Senser():
-    pass
+class Sensor():
+    def get_data():
+        pass
