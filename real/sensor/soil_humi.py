@@ -16,7 +16,7 @@ class SoilHumiSensor(Sensor, object):
         self.spi.max_speed_hz = 1000000 
         return self
 
-    def __exit__(self):
+    def __exit__(self, exc_type, exc_val, exc_tb):
         self.spi.close()
 
     def __readChannel(self, channel): 
@@ -31,9 +31,6 @@ class SoilHumiSensor(Sensor, object):
         else:
             return "err"
 
-
-    
-    
-with SoilHumiSensor as s1:
+with SoilHumiSensor() as s1:
     print(s1.get_data())
     
