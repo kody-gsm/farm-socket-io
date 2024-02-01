@@ -17,12 +17,12 @@ class TempHumiSensor(Sensor, object):
     def setting(self, func):
         self.dhtDevice = adafruit_dht.DHT11(board.D4)
 
-        result = func()
+        result = func(self)
 
         self.dhtDevice.exit()
         return result
 
-    @setting
+    @setting()
     def get_data(self):
         try:
         # Print the values to the serial port
