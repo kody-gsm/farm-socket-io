@@ -5,7 +5,7 @@ import asyncio
 import json
 from websockets.exceptions import ConnectionClosedError
 
-USER_NAME = '1234'
+USER_NAME = 'rpi_1234'
 
 BACKEND_URL = '192.168.1.4:8000'
 
@@ -36,14 +36,15 @@ async def main():
     url = f"ws://{BACKEND_URL}/ws/{USER_NAME}"
     print(url)
     try:
-        for ii in range(1000):
+        for ii in range(200):
             async with websockets.connect(url, ping_interval=None) as websocket:
-                for i in range(10):
-                    print(ii)
+                for i in range(1):
+                    print(i)
                     try:
                         await asyncio.gather(capture(websocket))
                     except websockets.ConnectionClosed:
                         print('tttterminate')
+                await websocket.close()
 
     except ConnectionClosedError as e:
         print(f"WebSocket connection closed unexpectedly: {e}")
