@@ -7,7 +7,7 @@ from websockets.exceptions import ConnectionClosedError
 
 USER_NAME = '1234'
 
-BACKEND_URL = '192.168.1.5:8000'
+BACKEND_URL = '192.168.1.4:8000'
 
 async def capture(ws):
     if not cv2.waitKey(33) < 0:
@@ -36,12 +36,14 @@ async def main():
     url = f"ws://{BACKEND_URL}/ws/{USER_NAME}"
     print(url)
     try:
-        async with websockets.connect(url, ping_interval=None) as websocket:
-            for ii in range(100):
-                print(ii)
-                if not websocket.open:
-                    return
-                await asyncio.gather(capture(websocket))
+        for ii in range(1000):
+            async with websockets.connect(url, ping_interval=None) as websocket:
+                for i in range(10):
+                    print(ii)
+                    try:
+                        await asyncio.gather(capture(websocket))
+                    except websockets.ConnectionClosed:
+                        print('tttterminate')
 
     except ConnectionClosedError as e:
         print(f"WebSocket connection closed unexpectedly: {e}")
