@@ -1,5 +1,3 @@
-import time
-import asyncio
 import board
 import adafruit_dht
 from sensor import Sensor
