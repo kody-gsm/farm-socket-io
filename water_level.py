@@ -32,8 +32,7 @@ def water_level():
       converted = math.ceil(convertPercent(val)*100)/100
       print(val, "/", converted,"%")
       display.lcd_clear()
-      display.lcd_display_extended_string("Water Level:",1)
-      display.lcd_display_extended_string(str(converted),2)
+      display.lcd_display_extended_string("WaterLevel:"+str(round(converted*21)/10)+'%',1)
     else:
       print('err')
     time.sleep(delay)
