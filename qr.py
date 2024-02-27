@@ -39,7 +39,7 @@ def ResgistNetwork():
         password = '\n\t'+wifi_data['P']
     ssid = '\n\t'+wifi_data['S']
     if not 'NONE' in wifi_data['T']:
-        key_mgmt = '\n\t'+wifi_data['T'].lower()s+'-psk'
+        key_mgmt = '\n\t'+wifi_data['T'].lower()+'-psk'
     
     connection = '[connection]\nid='+ssid+'\n'
 
