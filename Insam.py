@@ -5,6 +5,7 @@ import os
 import drivers
 import time
 import asyncio
+from real.sensor.temp_humi import TempHumiSensor
 
 # sudo python3 Insam.py
 async def main():
@@ -19,11 +20,12 @@ async def main():
         display.lcd_clear()
         display.lcd_display_extended_string("Network is",1)
         display.lcd_display_extended_string("Enabled",2)
+        temp_humi = TempHumiSensor()
         while True:
             # soil_humi_task = asyncio.create_task(ReadSoilHumi())
-            dht_task = asyncio.create_task(Dht()) #맨 마지막
+            # dht_task = asyncio.create_task(Dht()) #맨 마지막
             try:
-                temp, hum=await dht_task
+                temp, hum=temp_humi
                 # soil_humi = await soil_humi_task
                 if temp and hum:
                     print(temp,hum)
