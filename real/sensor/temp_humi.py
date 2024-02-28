@@ -1,8 +1,12 @@
 import board
 import adafruit_dht
-from sensor import Sensor
+import sys
+sys.path.append('/home/kody/Documents/insam/real/sensor')
 
-class TempHumiSensor(Sensor, object):
+from sensor import Sensor
+class TempHumiSensor(Sensor, object):  
+    dhtDevice = None
+
     def __new__(cls, *args, **kwargs):
         if not hasattr(cls, "_instance"):
             cls._instance = super().__new__(cls)
@@ -21,12 +25,12 @@ class TempHumiSensor(Sensor, object):
 
     def get_data(self):
         try:
-        # Print the values to the serial port
+        # Print the __enter__values to the serial port
             temperature_c = self.dhtDevice.temperature
             humidity = self.dhtDevice.humidity
             return temperature_c, humidity
         except RuntimeError as error:
             return "err"
         
-with TempHumiSensor() as s1:
-    print(s1.get_data())
+# with TempHumiSensor() as s1:
+#     print(s1.get_data())

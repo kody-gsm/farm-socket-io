@@ -1,3 +1,6 @@
+import sys
+sys.path.append('/home/kody/Documents/insam/real/sensor')
+
 from sensor import Sensor
 import spidev
 import math
@@ -25,17 +28,15 @@ class SoilHumiSensor(Sensor, object):
         data = ((val[1]&3) << 8) + val[2]
         return data
     
-    def __convertPercent(data):
-        return (100.0-round(((data*100)/float(1023)),1))
+    def __convertPercent(self, data):
+        return 100.0-round(((data*100)/float(1023)),1)
     
     def get_data(self):
         val = self.__readChannel(1)
-        if (val != 0) : # filtering for meaningless num
-            print(self.__convertPercent(val))
-            return (math.ceil(self.__convertPercent(val)*100)/100)
+        if val != 0 : # filtering for meaningless num
+            return math.ceil(self.__convertPercent(val)*100)/100
         else:
             return "err"
 
-with SoilHumiSensor() as s1:
-    print(s1.get_data())
+# with SoilHumiSensor() as s1:s
     
