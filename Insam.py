@@ -1,9 +1,7 @@
 import qr
-# from dht import Dht
 from real.sensor.soil_humi import SoilHumiSensor
 from real.sensor.temp_humi import TempHumiSensor
 from real.sensor.water_level import WaterLevelSenSor
-# from soil import ReadSoilHumi
 import os
 import drivers
 import time
@@ -36,8 +34,6 @@ async def main():
         
         with TempHumiSensor() as dht_task, SoilHumiSensor() as soil_task, WaterLevelSenSor() as water_task:
             while True:
-                # soil_humi_task = asyncio.create_task(ReadSoilHumi())
-                # dht_task = asyncio.create_task(Dht()) #맨 마지막
                 try:
                     temp, hum= dht_task.get_data()
                     soil =  soil_task.get_data()
@@ -46,12 +42,10 @@ async def main():
                     if temp and hum:
                         print('temp:',temp,'humi',hum)
                         display.lcd_clear()
-                        # display.lcd_display_extended_string("temp: {}C".format(temp),1)
-                        # display.lcd_display_extended_string("hum: {}%".format(hum),2)
                     if soil:
                         print('soil', soil)
                     if water:
-                        print('water_leverl', water)
+                        print('water_level', water)
                         display.lcd_clear()
                         display.lcd_display_extended_string("WaterLevel:"+water+'%',1)
                     time.sleep(0.3)

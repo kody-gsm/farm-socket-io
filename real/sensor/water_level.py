@@ -40,5 +40,3 @@ class WaterLevelSenSor(Sensor, object):
         else:
             return "err"
         
-with WaterLevelSenSor() as s1:
-    print(s1.get_data())

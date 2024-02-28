@@ -2,8 +2,8 @@ import board
 import adafruit_dht
 import sys
 sys.path.append('/home/kody/Documents/insam/real/sensor')
-
 from sensor import Sensor
+
 class TempHumiSensor(Sensor, object):  
     dhtDevice = None
 
@@ -32,5 +32,3 @@ class TempHumiSensor(Sensor, object):
         except RuntimeError as error:
             return "err"
         
-# with TempHumiSensor() as s1:
-#     print(s1.get_data())
