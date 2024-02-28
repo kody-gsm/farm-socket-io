@@ -69,4 +69,3 @@ def ResgistNetwork():
 
     cv2.destroyAllWindows()
 
-ResgistNetwork()
