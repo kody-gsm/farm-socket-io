@@ -5,10 +5,11 @@ class LcdDisplay(Controller, object):
     def __new__(cls, *args, **kwargs):
         if not hasattr(cls, "_instance"):
             cls._instance = super().__new__(cls)
+            cls._instance.display=drivers.Lcd()
 
         return cls._instance
     def __init__(self) -> None:
-        self.display=drivers.Lcd()
+        self.display:drivers.Lcd
 
     def set(self, string1:str, string2:str|None = None):
         self.display.lcd_clear()
