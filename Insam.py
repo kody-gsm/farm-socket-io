@@ -32,8 +32,9 @@ async def main():
         display.lcd_display_extended_string("Network is",1)
         display.lcd_display_extended_string("Enabled",2)
         
-        while True:
-            with TempHumiSensor() as dht_task, SoilHumiSensor() as soil_task, WaterLevelSenSor() as water_task:
+        with TempHumiSensor() as dht_task, SoilHumiSensor() as soil_task, WaterLevelSenSor() as water_task:
+            while True:
+                # socket opens
                 try:
                     temp, hum= dht_task.get_data()
                     soil =  soil_task.get_data()
@@ -48,15 +49,18 @@ async def main():
                         print('water_level', water)
                         display.lcd_clear()
                         display.lcd_display_extended_string("Water:"+water+'%',1)
+                    # if water and soil and temp and hum:
+                        # send datas via websocket.
                     time.sleep(0.2)
-                    # if soil_humi != "ERROR":
-                    #     print(soil_humi,"%")
                 except Exception as e:
                     display.lcd_clear()
                     print(e)
                     display.lcd_display_extended_string("something",1)
                     display.lcd_display_extended_string("error",2)
                     time.sleep(2.0)
+                # open photo class
+                    # send photo data via websocket
+                # socket closes
     else:
         qr.ResgistNetwork()
 

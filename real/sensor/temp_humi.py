@@ -30,5 +30,5 @@ class TempHumiSensor(Sensor, object):
             humidity = self.dhtDevice.humidity
             return temperature_c, humidity
         except RuntimeError as error:
-            return "err", "err"
+            return error, error
         
