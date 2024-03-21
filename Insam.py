@@ -32,8 +32,8 @@ async def main():
         display.lcd_display_extended_string("Network is",1)
         display.lcd_display_extended_string("Enabled",2)
         
-        with TempHumiSensor() as dht_task, SoilHumiSensor() as soil_task, WaterLevelSenSor() as water_task:
-            while True:
+        while True:
+            with TempHumiSensor() as dht_task, SoilHumiSensor() as soil_task, WaterLevelSenSor() as water_task:
                 try:
                     temp, hum= dht_task.get_data()
                     soil =  soil_task.get_data()
@@ -47,8 +47,8 @@ async def main():
                     if water:
                         print('water_level', water)
                         display.lcd_clear()
-                        display.lcd_display_extended_string("WaterLevel:"+water+'%',1)
-                    time.sleep(0.3)
+                        display.lcd_display_extended_string("Water:"+water+'%',1)
+                    time.sleep(0.2)
                     # if soil_humi != "ERROR":
                     #     print(soil_humi,"%")
                 except Exception as e:
