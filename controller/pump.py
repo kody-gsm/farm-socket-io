@@ -58,7 +58,7 @@ class Pump(object):
         GPIO.output(IN1, LOW)
         GPIO.output(IN2, LOW)
 
-    def work(self, speed = 80, is_backword = False):
+    def work(self, speed = 30, is_backword = False):
         self.pwm.ChangeDutyCycle(speed) 
         if is_backword:
             GPIO.output(IN1, LOW)
@@ -69,3 +69,4 @@ class Pump(object):
         
 with Pump() as pump:
     pump.work()
+    sleep(3)
