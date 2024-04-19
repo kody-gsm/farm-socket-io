@@ -1,7 +1,7 @@
-import qr
-from real.sensor.soil_humi import SoilHumiSensor
-from real.sensor.temp_humi import TempHumiSensor
-from real.sensor.water_level import WaterLevelSenSor
+from utils import qr
+from sensor.soil_humi import SoilHumiSensor
+from sensor.temp_humi import TempHumiSensor
+from sensor.water_level import WaterLevelSenSor
 import os
 import drivers
 import time

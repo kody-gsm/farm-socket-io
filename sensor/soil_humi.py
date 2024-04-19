@@ -1,7 +1,7 @@
 import sys
-sys.path.append('/home/kody/Documents/insam/real/sensor')
+sys.path.append('/home/kody/Documents/insam/sensor')
 
-from sensor import Sensor
+from sensor.sensor import Sensor
 import spidev
 import math
 
@@ -36,7 +36,7 @@ class SoilHumiSensor(Sensor, object):
         if val != 0 : # filtering for meaningless num
             return math.ceil(self.__convertPercent(val)*100)/100
         else:
-            return "err"
+            raise Exception("err")
 
 # with SoilHumiSensor() as s1:s
     

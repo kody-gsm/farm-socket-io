@@ -1,8 +1,8 @@
 import spidev
 import sys
 import math
-sys.path.append('/home/kody/Documents/insam/real/sensor')
-from sensor import Sensor
+sys.path.append('/home/kody/Documents/insam/sensor')
+from sensor.sensor import Sensor
 
 class WaterLevelSenSor(Sensor, object):
     def __new__(cls, *args, **kwargs):
@@ -38,5 +38,5 @@ class WaterLevelSenSor(Sensor, object):
         if (val != 0) : # filtering for meaningless num
             return str(round(math.ceil(self.__convertPercent(val)*100*2.8)/100*21)/10) #2.8 for compliment
         else:
-            return "err"
+            return Exception("err")
         
