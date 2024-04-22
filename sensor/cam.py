@@ -29,14 +29,17 @@ class CamSenSor(Sensor, object):
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.cam.release()
     
-    def get_data(self):
+    def get_data(self, is_base64=True):
         ret,frame = self.cam.read()
         if not ret:
             return None
-        _, img_en = cv2.imencode('.jpg', frame)
-        img_64 =base64.b64encode(img_en)
-        img_str = img_64.decode('utf-8')
-        return img_str
+        _, img_en = cv2.imencode('.jpg', frame)\
+        
+        if is_base64:
+            img_64 =base64.b64encode(img_en)
+            img_str = img_64.decode('utf-8')
+            return img_str
+        return img_en
     
 with CamSenSor() as cam:
     try:
