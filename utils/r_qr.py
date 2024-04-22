@@ -1,6 +1,8 @@
 from pyzbar.pyzbar import decode
 import cv2
 import os
+import sys
+sys.path.append('/home/kody/Documents/Insam_Rasp')
 from sensor.cam import CamSenSor
 
 def get_qr_info():
@@ -8,11 +10,11 @@ def get_qr_info():
         # 시간초과 넣어야함
         while True: 
             data = cam.get_data(is_base64=False)
-            if data:
-                decoded_data = decode(data)
-                if not len(decoded_data) == 0:
-                    r = str(decoded_data[0][0])
-                    break
+            # if data != None:
+            decoded_data = decode(data)
+            if not len(decoded_data) == 0:
+                r = str(decoded_data[0][0])
+                break
         
     r = str(r).split("'")[1]
     r = r.split(";") 
@@ -53,3 +55,5 @@ def connect_network():
             os.system("reboot")
 
     cv2.destroyAllWindows()
+    
+connect_network()
