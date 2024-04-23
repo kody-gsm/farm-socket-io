@@ -29,31 +29,27 @@ send_cam_task:asyncio.Task|None = None
 async def msg_switch(msg):
     # msg 분류
     cmd = None
-    match msg[0]:
-        case "s": # 센서
-            match msg[1]:
-                case "1": # 온습도
-                    cmd = send_temp_humi
-                case "2": # 토양 습도
-                    cmd = send_soil_humi
-                case "3": # 수위
-                    cmd = send_water_level
-                case "4": # 카메라
-                    cmd = send_cam
+    if msg[0] == "s":
+        if msg[1] == "1": # 온습도
+            cmd = send_temp_humi
+        elif msg[1] == "2": # 토양 습도
+            cmd = send_soil_humi
+        elif msg[1] == "3": # 수위
+            cmd = send_water_level
+        elif msg[1] == "4": # 카메라
+            cmd = send_cam
 
-        case "c": # 컨트롤러
-            match msg[1]:
-                case "c1": # led
-                    pass
-                case "c2": # lcd
-                    pass
-                case "c3": # pump
-                    pass
+    elif msg[0] == "c": # 컨트롤러
+        if msg[1] == "1": # led
+            pass
+        elif msg[1] == "2": # lcd
+            pass
+        elif msg[1] == "3": # pump
+            pass
 
-        case "s": # 설정
-            match msg[1]:
-                case "s1": # 미정
-                    pass
+    elif msg[0] == "s": # 설정
+        if msg[1] == "1": # 미정
+            pass
     
     if cmd:
         detail = None
@@ -64,18 +60,22 @@ async def msg_switch(msg):
             global send_cam_task
             send_cam_task = task
 
+
 async def send_temp_humi(details):
     with sensor.temp_humi.TempHumiSensor() as s:
         data = s.get_data()
         await SOCKET.send(data)
+
 async def send_soil_humi(details):
     with sensor.soil_humi.SoilHumiSensor() as s:
         data = s.get_data()
         await SOCKET.send(data)
+
 async def send_water_level(details):
     with sensor.water_level.WaterLevelSenSor() as s:
         data = s.get_data()
         await SOCKET.send(data)
+
 async def send_cam(details):
     if details == "stream":
         if send_cam_task:
@@ -93,3 +93,5 @@ async def send_cam(details):
         with sensor.cam.CamSenSor() as s:
             data = s.get_data()
             await SOCKET.send(data)
+
+# async def control_led(detail):
