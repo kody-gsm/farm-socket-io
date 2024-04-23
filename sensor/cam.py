@@ -33,20 +33,20 @@ class CamSenSor(Sensor, object):
         ret,frame = self.cam.read()
         if not ret:
             return None
-        _, img_en = cv2.imencode('.jpg', frame)\
+        if not is_base64:
+            return frame
+        _, img_en = cv2.imencode('.jpg', frame)
         
-        if is_base64:
-            img_64 =base64.b64encode(img_en)
-            img_str = img_64.decode('utf-8')
-            return img_str
-        return img_en
+        img_64 =base64.b64encode(img_en)
+        img_str = img_64.decode('utf-8')
+        return img_str
     
-with CamSenSor() as cam:
-    try:
-        data = cam.get_data()
-        if data:
-            print(len(data))
-        else:
-            print("cam none")
-    except:
-        print("error")
+# with CamSenSor() as cam:
+#     try:
+#         data = cam.get_data()
+#         if data:
+#             print(len(data))
+#         else:
+#             print("cam none")
+#     except:
+#         print("error")

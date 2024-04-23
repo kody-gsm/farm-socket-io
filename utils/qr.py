@@ -1,6 +1,7 @@
 import cv2
+import os, sys
+sys.path.append('/home/kody/Documents/Insam_Rasp')
 import drivers
-import os
 import time
 from pyzbar.pyzbar import decode
 
@@ -17,11 +18,12 @@ def ResgistNetwork():
     while cv2.waitKey(33) < 0:
         ret, frame = capture.read()
         # cv2.imshow('qr',frame)
+        print(frame)
+        break
         decoded_data = decode(frame)
         if not len(decoded_data) == 0:
             r = str(decoded_data[0][0])
             break
-
     r = str(r).split("'")[1]
     r = r.split(";") 
     wifi_data = {}
@@ -69,3 +71,4 @@ def ResgistNetwork():
 
     cv2.destroyAllWindows()
 
+ResgistNetwork()
