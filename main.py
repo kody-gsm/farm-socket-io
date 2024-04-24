@@ -5,27 +5,27 @@ import sensor.temp_humi
 import sensor.water_level
 import asyncio, websockets
 import sensor
-
+import typing
 SOCKET:websockets.WebSocketClientProtocol
 
+SERVER_URL = "ws://192.168.1.15:8000/pot/connect"
+
 async def main():
-    
 
     # socket 연결
-    SERVER_URL = "ws://localhost:8001"
     try:
-        async with websockets.connect(SERVER_URL) as socket:
+        async with websockets.connect(SERVER_URL, extra_headers={"pot_code":"sds"}) as socket:
             global SOCKET
             SOCKET = socket
             while True:
                 msg = await socket.recv()
-                
+                print(msg)
                 await msg_switch(msg)
                 
     except websockets.ConnectionClosedOK:
         print("socket end")
 
-send_cam_task:asyncio.Task|None = None
+send_cam_task:typing.Union[asyncio.Task, None] = None
 async def msg_switch(msg):
     # msg 분류
     cmd = None
@@ -64,7 +64,7 @@ async def msg_switch(msg):
 async def send_temp_humi(details):
     with sensor.temp_humi.TempHumiSensor() as s:
         data = s.get_data()
-        await SOCKET.send(data)
+        await SOCKET.send(str(data))
 
 async def send_soil_humi(details):
     with sensor.soil_humi.SoilHumiSensor() as s:
@@ -77,9 +77,14 @@ async def send_water_level(details):
         await SOCKET.send(data)
 
 async def send_cam(details):
+    print(details)
     if details == "stream":
+        print('dk')
         if send_cam_task:
+            print("tlqkf")
             raise "already stream"
+        
+        print("asd")
         with sensor.cam.CamSenSor() as s:
             while True:
                 data = s.get_data()
@@ -90,8 +95,11 @@ async def send_cam(details):
             raise "task is None"
         send_cam_task.cancel()
     else:
+        print("dksl")
         with sensor.cam.CamSenSor() as s:
             data = s.get_data()
             await SOCKET.send(data)
 
 # async def control_led(detail):
+if __name__ == "__main__":
+    asyncio.run(main())
