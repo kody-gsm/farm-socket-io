@@ -67,6 +67,6 @@ class Pump(object):
             GPIO.output(IN1, HIGH)
             GPIO.output(IN2, LOW)
         
-with Pump() as pump:
-    pump.work()
-    sleep(3)
+# with Pump() as pump:
+#     pump.work()
+#     sleep(3)

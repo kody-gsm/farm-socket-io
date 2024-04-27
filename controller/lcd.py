@@ -11,6 +11,12 @@ class LcdDisplay(Controller, object):
     def __init__(self) -> None:
         self.display:drivers.Lcd
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        return
+
     def set(self, string1:str, string2:str|None = None):
         self.display.lcd_clear()
         self.display.lcd_display_extended_string(string1, 1)

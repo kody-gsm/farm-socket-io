@@ -1,3 +1,6 @@
+import controller.lcd
+import controller.led
+import controller.pump
 import sensor.cam
 import sensor.sensor
 import sensor.soil_humi
@@ -5,6 +8,7 @@ import sensor.temp_humi
 import sensor.water_level
 import asyncio, websockets
 import sensor
+import controller
 
 SOCKET:websockets.WebSocketClientProtocol
 
@@ -44,11 +48,11 @@ async def msg_switch(msg):
         case "c": # 컨트롤러
             match msg[1]:
                 case "c1": # led
-                    pass
+                    cmd = controll_led
                 case "c2": # lcd
-                    pass
+                    cmd = controll_lcd
                 case "c3": # pump
-                    pass
+                    cmd = controll_pump
 
         case "s": # 설정
             match msg[1]:
@@ -93,3 +97,26 @@ async def send_cam(details):
         with sensor.cam.CamSenSor() as s:
             data = s.get_data()
             await SOCKET.send(data)
+
+async def controll_led(detail):
+    with controller.led.Led() as c:
+        if detail == "True":  
+            c.set(light=True)
+        elif detail == "False":  
+            c.set(light=False)
+async def controll_lcd(detail):
+    with controller.lcd.LcdDisplay() as c:
+        sli = detail.split("|")
+        if len(sli) == 1:
+            c.set(sli[0])
+        elif len(sli) == 2:
+            c.set(sli[0], sli[1])
+async def controll_pump(detail):
+    try:
+        with controller.pump.Pump() as c:
+            sli = detail.split("|")         
+            c.work(int(sli[1]))
+            await asyncio.sleep(int(sli[0]))
+            c.stop()
+    except:
+        pass

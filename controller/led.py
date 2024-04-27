@@ -10,16 +10,23 @@ class Led(Controller, object):
     def __new__(cls, *args, **kwargs):
         if not hasattr(cls, "_instance"):
             cls._instance = super().__new__(cls)
+            cls._instance.status = False
         return cls._instance
     
     def __init__(self) -> None:
+        self.status:bool
+
+    def __enter__(self):
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(Led.PIN_NUMBER, GPIO.OUT)
-        self.status = False
+        return self
 
-    def set(self, is_light:bool):
-        self.status = is_light
-        if is_light:
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        return
+
+    def set(self, light:bool):
+        self.status = light
+        if light:
             GPIO.output(Led.PIN_NUMBER, 1)
         else:
             GPIO.output(Led.PIN_NUMBER, 0)
