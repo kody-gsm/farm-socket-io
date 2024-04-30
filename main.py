@@ -31,7 +31,9 @@ async def main():
         print("socket end")
 
 send_cam_task:typing.Union[asyncio.Task, None] = None
-async def msg_switch(msg):
+async def msg_switch(msg:str):
+    id, msg = msg.split("#", 1)
+
     # msg 분류
     cmd = None
     if msg[0] == "s":
@@ -60,28 +62,28 @@ async def msg_switch(msg):
         detail = None
         if len(msg) > 2:
             detail = msg[2:]
-        task = asyncio.create_task(cmd(detail))
+        task = asyncio.create_task(cmd(id, detail))
         if msg == "s4stream":
             global send_cam_task
             send_cam_task = task
 
 
-async def send_temp_humi(details):
+async def send_temp_humi(id, details):
     with sensor.temp_humi.TempHumiSensor() as s:
         data = s.get_data()
-        await SOCKET.send(str(data))
+        await SOCKET.send(id+"#"+str(data))
 
-async def send_soil_humi(details):
+async def send_soil_humi(id, details):
     with sensor.soil_humi.SoilHumiSensor() as s:
         data = s.get_data()
-        await SOCKET.send(data)
+        await SOCKET.send(id+"#"+data)
 
-async def send_water_level(details):
+async def send_water_level(id, details):
     with sensor.water_level.WaterLevelSenSor() as s:
         data = s.get_data()
-        await SOCKET.send(data)
+        await SOCKET.send(id+"#"+data)
 
-async def send_cam(details):
+async def send_cam(id, details):
     print(details)
     if details == "stream":
         print('dk')
@@ -93,7 +95,7 @@ async def send_cam(details):
         with sensor.cam.CamSenSor() as s:
             while True:
                 data = s.get_data()
-                await SOCKET.send(data)
+                await SOCKET.send(id+"#"+data)
                 await asyncio.sleep(0.5)
     elif details == "stop":
         if not send_cam_task:
@@ -103,7 +105,7 @@ async def send_cam(details):
         print("dksl")
         with sensor.cam.CamSenSor() as s:
             data = s.get_data()
-            await SOCKET.send(data)
+            await SOCKET.send(id+"#"+data)
 
 async def controll_led(detail):
     with controller.led.Led() as c:
