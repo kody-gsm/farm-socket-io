@@ -1,5 +1,6 @@
 from controller.controller import Controller
 import drivers
+from typing import Union
 
 class LcdDisplay(Controller, object):
     def __new__(cls, *args, **kwargs):
@@ -17,7 +18,7 @@ class LcdDisplay(Controller, object):
     def __exit__(self, exc_type, exc_val, exc_tb):
         return
 
-    def set(self, string1:str, string2:str|None = None):
+    def set(self, string1:str, string2:Union[str, None] = None):
         self.display.lcd_clear()
         self.display.lcd_display_extended_string(string1, 1)
         if string2:
