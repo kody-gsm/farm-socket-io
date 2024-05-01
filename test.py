@@ -1,8 +1,7 @@
-SERVER_URL = "ws://192.168.1.15:8000/pot/connect"
-import asyncio, websockets
+from controller.led import Led
 
-async def sckt():
-    async with websockets.connect(SERVER_URL, extra_headers={"pot_code":"asdasddsa"}) as socket:
-        print("asd")
+with Led() as led:
+    led.set(True)
 
-asyncio.run(sckt())
+    import time
+    time.sleep(5)
