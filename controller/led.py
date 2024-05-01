@@ -1,4 +1,4 @@
-from controller import Controller
+from controller.controller import Controller
 import RPi.GPIO as GPIO
 
 GPIO.setmode(GPIO.BCM)

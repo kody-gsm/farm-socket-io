@@ -1,4 +1,4 @@
-from controller import Controller
+from controller.controller import Controller
 import drivers
 
 class LcdDisplay(Controller, object):
