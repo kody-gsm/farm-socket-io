@@ -7,8 +7,6 @@ from sensor import soil_humi
 from sensor import temp_humi
 from sensor import water_level
 import asyncio, websockets
-import sensor
-import controller
 
 import typing
 SOCKET:websockets.WebSocketClientProtocol
