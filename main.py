@@ -1,11 +1,11 @@
-import controller.lcd
-import controller.led
-import controller.pump
-import sensor.cam
-import sensor.sensor
-import sensor.soil_humi
-import sensor.temp_humi
-import sensor.water_level
+from controller import lcd
+from controller import led
+from controller import pump
+from sensor import cam
+from sensor import sensor
+from sensor import soil_humi
+from sensor import temp_humi
+from sensor import water_level
 import asyncio, websockets
 import sensor
 import controller
@@ -69,17 +69,17 @@ async def msg_switch(msg:str):
 
 
 async def send_temp_humi(id, details):
-    with sensor.temp_humi.TempHumiSensor() as s:
+    with temp_humi.TempHumiSensor() as s:
         data = s.get_data()
         await SOCKET.send(id+"#"+str(data))
 
 async def send_soil_humi(id, details):
-    with sensor.soil_humi.SoilHumiSensor() as s:
+    with soil_humi.SoilHumiSensor() as s:
         data = s.get_data()
         await SOCKET.send(id+"#"+data)
 
 async def send_water_level(id, details):
-    with sensor.water_level.WaterLevelSenSor() as s:
+    with water_level.WaterLevelSenSor() as s:
         data = s.get_data()
         await SOCKET.send(id+"#"+data)
 
@@ -92,7 +92,7 @@ async def send_cam(id, details):
             raise "already stream"
         
         print("asd")
-        with sensor.cam.CamSenSor() as s:
+        with cam.CamSenSor() as s:
             while True:
                 data = s.get_data()
                 await SOCKET.send(id+"#"+data)
@@ -103,18 +103,18 @@ async def send_cam(id, details):
         send_cam_task.cancel()
     else:
         print("dksl")
-        with sensor.cam.CamSenSor() as s:
+        with cam.CamSenSor() as s:
             data = s.get_data()
             await SOCKET.send(id+"#"+data)
 
 async def controll_led(detail):
-    with controller.led.Led() as c:
+    with led.Led() as c:
         if detail == "True":  
             c.set(light=True)
         elif detail == "False":  
             c.set(light=False)
 async def controll_lcd(detail):
-    with controller.lcd.LcdDisplay() as c:
+    with lcd.LcdDisplay() as c:
         sli = detail.split("|")
         if len(sli) == 1:
             c.set(sli[0])
@@ -122,7 +122,7 @@ async def controll_lcd(detail):
             c.set(sli[0], sli[1])
 async def controll_pump(detail):
     try:
-        with controller.pump.Pump() as c:
+        with pump.Pump() as c:
             sli = detail.split("|")         
             c.work(int(sli[1]))
             await asyncio.sleep(int(sli[0]))
