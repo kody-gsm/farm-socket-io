@@ -1,10 +1,6 @@
 from controller.controller import Controller
 import RPi.GPIO as GPIO
 
-GPIO.setmode(GPIO.BCM)
-
-GPIO.setup(14, GPIO.OUT)
-
 class Led(Controller, object):
     PIN_NUMBER = 14
     def __new__(cls, *args, **kwargs):
