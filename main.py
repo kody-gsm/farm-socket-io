@@ -13,7 +13,7 @@ import controller
 import typing
 SOCKET:websockets.WebSocketClientProtocol
 
-SERVER_URL = "ws://192.168.1.15:8000/pot/connect"
+SERVER_URL = "ws://insam-api.dodojini.shop/pot/connect"
 
 async def main():
 
