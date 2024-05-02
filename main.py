@@ -111,6 +111,8 @@ async def controll_led(detail):
             c.set(light=True)
         elif detail == "False":  
             c.set(light=False)
+    await SOCKET.send("set led")
+
 async def controll_lcd(detail):
     with lcd.LcdDisplay() as c:
         sli = detail.split("|")
@@ -118,13 +120,17 @@ async def controll_lcd(detail):
             c.set(sli[0])
         elif len(sli) == 2:
             c.set(sli[0], sli[1])
+    await SOCKET.send("set lcd")
+    
 async def controll_pump(detail):
     try:
         with pump.Pump() as c:
             sli = detail.split("|")         
             c.work(int(sli[1]))
+            await SOCKET.send("start pump")
             await asyncio.sleep(int(sli[0]))
             c.stop()
+            await SOCKET.send("end pump")
     except:
         pass
 # async def control_led(detail):
