@@ -1,7 +1,11 @@
-from controller.led import Led
+from sensor.cam import CamSenSor
 
-with Led() as led:
-    led.set(True)
-
-    import time
-    time.sleep(5)
+with CamSenSor() as cam:
+    try:
+        data = cam.get_data()
+        if data:
+            print(len(data))
+        else:
+            print("cam none")
+    except:
+        print("error")
