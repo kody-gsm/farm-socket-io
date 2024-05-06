@@ -7,5 +7,5 @@ with CamSenSor() as cam:
             print(len(data))
         else:
             print("cam none")
-    except:
-        print("error")
+    except Exception as e:
+        print(e)
