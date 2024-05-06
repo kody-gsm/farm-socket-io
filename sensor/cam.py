@@ -32,6 +32,7 @@ class CamSenSor(Sensor, object):
     def get_data(self, is_base64=True):
         ret,frame = self.cam.read()
         if not ret:
+            print("ret", ret)
             return None
         if not is_base64:
             return frame
