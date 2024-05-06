@@ -1,8 +1,8 @@
 import cv2
-from picamera2 import Picamera2
 import base64
 
 from sensor.sensor import Sensor
+import spidev
 
 class CamSenSor(Sensor, object):
     def __new__(cls, *args, **kwargs):
@@ -14,22 +14,28 @@ class CamSenSor(Sensor, object):
         self.cam:cv2.VideoCapture
 
     def __enter__(self):
-        picam2 = Picamera2()
-        picam2.preview_configuration.main.size = (640,480)
-        picam2.preview_configuration.main.format = "RGB888"
-        picam2.preview_configuration.align()
-        picam2.configure("preview")
-        picam2.start()
-
+        try:
+            if not cv2.waitKey(33) < 0:
+                raise Exception("fail waitkey is small")
+            self.cam = cv2.VideoCapture(0)
+            if not self.cam.isOpened():
+                raise Exception("can't get camera")
+            self.cam.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+            self.cam.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+            return self
+        except:
+            return Exception("fail why?")
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        cv2.destroyAllWindows()
+        self.cam.release()
     
     def get_data(self, is_base64=True):
-        im= picam2.capture_array()
+        ret,frame = self.cam.read()
+        if not ret:
+            return None
         if not is_base64:
-            return im
-        _, img_en = cv2.imencode('.jpg', im)
+            return frame
+        _, img_en = cv2.imencode('.jpg', frame)
         
         img_64 =base64.b64encode(img_en)
         img_str = img_64.decode('utf-8')
