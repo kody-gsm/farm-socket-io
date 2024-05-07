@@ -58,8 +58,8 @@ async def msg_switch(msg:str):
     
     if cmd:
         detail = None
-        if len(msg) > 2:
-            detail = msg[2:]
+        if len(msg) > 3:
+            detail = msg[3:]
         task = asyncio.create_task(cmd(id, detail))
         if msg == "s4stream":
             global send_cam_task
@@ -69,17 +69,17 @@ async def msg_switch(msg:str):
 async def send_temp_humi(id, details):
     with temp_humi.TempHumiSensor() as s:
         data = s.get_data()
-        await SOCKET.send(id+"#"+str(data))
+        await SOCKET.send(id+"#s1:"+str(data))
 
 async def send_soil_humi(id, details):
     with soil_humi.SoilHumiSensor() as s:
         data = s.get_data()
-        await SOCKET.send(id+"#"+data)
+        await SOCKET.send(id+"#s2:"+data)
 
 async def send_water_level(id, details):
     with water_level.WaterLevelSenSor() as s:
         data = s.get_data()
-        await SOCKET.send(id+"#"+data)
+        await SOCKET.send(id+"#s3:"+data)
 
 async def send_cam(id, details):
     print(details)
@@ -91,48 +91,50 @@ async def send_cam(id, details):
         
         print("asd")
         with cam.CamSenSor() as s:
+            await SOCKET.send(id+"#s4:stream")
             while True:
                 data = s.get_data()
-                await SOCKET.send(id+"#"+data)
+                await SOCKET.send(id+"#s4:"+data)
                 await asyncio.sleep(0.5)
     elif details == "stop":
         if not send_cam_task:
             raise "task is None"
         send_cam_task.cancel()
+        await SOCKET.send(id+"#s4:stop")
     else:
         print("dksl")
         with cam.CamSenSor() as s:
             data = s.get_data()
-            await SOCKET.send(id+"#"+data)
+            await SOCKET.send(id+"#s4:"+data)
 
-async def controll_led(detail):
+async def controll_led(id, detail):
     with led.Led() as c:
         if detail == "True":  
             c.set(light=True)
         elif detail == "False":  
             c.set(light=False)
-    await SOCKET.send("set led")
+    await SOCKET.send(id+"#c1:set")
 
-async def controll_lcd(detail):
+async def controll_lcd(id, detail):
     with lcd.LcdDisplay() as c:
         sli = detail.split("|")
         if len(sli) == 1:
             c.set(sli[0])
         elif len(sli) == 2:
             c.set(sli[0], sli[1])
-    await SOCKET.send("set lcd")
+    await SOCKET.send(id+"#c2:set")
     
-async def controll_pump(detail):
+async def controll_pump(id, detail):
     try:
         with pump.Pump() as c:
             sli = detail.split("|")         
             c.work(int(sli[1]))
-            await SOCKET.send("start pump")
+            await SOCKET.send(id+"#s4:set start")
             await asyncio.sleep(int(sli[0]))
             c.stop()
-            await SOCKET.send("end pump")
+            await SOCKET.send(id+"#s4:set end")
     except:
-        pass
+        await SOCKET.send(id+"#c1:fail")
 # async def control_led(detail):
 if __name__ == "__main__":
     asyncio.run(main())
