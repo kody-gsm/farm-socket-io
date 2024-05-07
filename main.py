@@ -55,13 +55,19 @@ async def msg_switch(msg:str):
     elif msg[0] == "s": # 설정
         if msg[1] == "1": # 미정
             pass
+
+    elif msg[0] == "t":
+        if msg[1] == "1":
+            cmd = test_1
+        elif msg[1] == "2":
+            cmd = test_2
     
     if cmd:
         detail = None
         if len(msg) > 3:
             detail = msg[3:]
         task = asyncio.create_task(cmd(id, detail))
-        if msg == "s4stream":
+        if msg == "s4stream" or "t2":
             global send_cam_task
             send_cam_task = task
 
@@ -82,6 +88,7 @@ async def send_water_level(id, details):
         await SOCKET.send(id+"#s3:"+data)
 
 async def send_cam(id, details):
+    global send_cam_task
     print(details)
     if details == "stream":
         print('dk')
@@ -135,6 +142,25 @@ async def controll_pump(id, detail):
             await SOCKET.send(id+"#s4:set end")
     except:
         await SOCKET.send(id+"#c1:fail")
+
+async def test_1(id, details):
+    await SOCKET.send(id+"#good")
+
+async def test_2(id, details):
+    global send_cam_task
+    if details == "stream":
+        await SOCKET.send(id+"#start")
+
+        while True:
+            await SOCKET.send(id+"#test")
+            await asyncio.sleep(1)
+    elif details == "stop":
+        if not send_cam_task:
+            raise "task is None"
+        send_cam_task.cancel()
+        await SOCKET.send(id+"#stop")
+
+
 # async def control_led(detail):
 if __name__ == "__main__":
     asyncio.run(main())
