@@ -148,6 +148,7 @@ async def test_1(id, details):
 
 async def test_2(id, details):
     global send_cam_task
+    print(send_cam_task)
     if details == "stream":
         await SOCKET.send(id+"#start")
 
