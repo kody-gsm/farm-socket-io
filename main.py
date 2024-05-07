@@ -68,7 +68,8 @@ async def msg_switch(msg:str):
         if len(msg) > 3:
             detail = msg[3:]
         task = asyncio.create_task(cmd(id, detail))
-        if msg == "s4stream" or "t2:stream":
+
+        if msg == "s4stream" or msg == "t2:stream":
             print(1)
             global send_cam_task
             send_cam_task = task
