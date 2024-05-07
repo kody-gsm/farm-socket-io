@@ -115,6 +115,7 @@ async def send_cam(id, details):
         print("dksl")
         with cam.CamSenSor() as s:
             data = s.get_data()
+            print(data)
             await SOCKET.send(id+"#s4:"+data)
 
 async def controll_led(id, detail):
