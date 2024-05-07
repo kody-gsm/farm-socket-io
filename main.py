@@ -157,7 +157,7 @@ async def test_2(id, details):
     elif details == "stop":
         if not send_cam_task:
             raise "task is None"
-        send_cam_task.cancel()
+        await send_cam_task.cancel()
         send_cam_task = None
         await SOCKET.send(id+"#stop")
     print(send_cam_task)
