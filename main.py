@@ -29,6 +29,7 @@ async def main():
         print("socket end")
 
 send_cam_task:typing.Union[asyncio.Task, None] = None
+
 async def msg_switch(msg:str):
     id, msg = msg.split("#", 1)
 
@@ -159,6 +160,10 @@ async def test_2(id, details):
         if not send_cam_task:
             raise "task is None"
         await send_cam_task.cancel()
+        try:
+            await send_cam_task
+        except asyncio.CancelledError:
+            print("Task cancelled")
         await SOCKET.send(id+"#stop")
     print(send_cam_task)
 
