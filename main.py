@@ -161,11 +161,8 @@ async def test_2(id, details):
     elif details == "stop":
         if not send_cam_task:
             raise "task is None"
-        await send_cam_task.cancel()
-        try:
-            await send_cam_task
-        except asyncio.CancelledError:
-            print("Task cancelled")
+        send_cam_task.cancel()
+
         await SOCKET.send(id+"#stop")
     print(send_cam_task)
 
