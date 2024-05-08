@@ -94,7 +94,6 @@ async def send_cam(id, details):
     global send_cam_task
     print(send_cam_task)
     if details == "stream":
-        
         print("asd")
         with cam.CamSenSor() as s:
             await SOCKET.send(id+"#s4:stream")
