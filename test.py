@@ -10,7 +10,13 @@
 #     except Exception as e:
 #         print(e)
 
-from sensor.temp_humi import TempHumiSensor
+# from sensor.temp_humi import TempHumiSensor
 
-with TempHumiSensor() as s:
-    print(s.get_data())
+# with TempHumiSensor() as s:
+#     print(s.get_data())
+
+import time
+import board
+import adafruit_dht
+
+dhtDevice = adafruit_dht.DHT11(board.D4)
