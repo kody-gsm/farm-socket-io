@@ -69,7 +69,7 @@ async def msg_switch(msg:str):
             detail = msg[3:]
         task = asyncio.create_task(cmd(id, detail))
 
-        if msg == "s4stream" or msg == "t2:stream":
+        if msg == "s4:stream" or msg == "t2:stream":
             print(1)
             global send_cam_task
             send_cam_task = task
@@ -92,7 +92,7 @@ async def send_water_level(id, details):
 
 async def send_cam(id, details):
     global send_cam_task
-    print(details)
+    print(send_cam_task)
     if details == "stream":
         print('dk')
         if send_cam_task:
