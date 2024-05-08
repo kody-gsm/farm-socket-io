@@ -94,10 +94,6 @@ async def send_cam(id, details):
     global send_cam_task
     print(send_cam_task)
     if details == "stream":
-        print('dk')
-        if send_cam_task:
-            print("tlqkf")
-            raise "already stream"
         
         print("asd")
         with cam.CamSenSor() as s:
