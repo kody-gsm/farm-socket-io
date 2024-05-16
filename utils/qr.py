@@ -1,6 +1,6 @@
 import cv2
 import os, sys
-sys.path.append('/home/kody/Documents/Insam_Rasp')
+sys.path.append('/home/insam/Documents/Insam_Rasp')
 import drivers
 import time
 from pyzbar.pyzbar import decode
@@ -17,9 +17,7 @@ def ResgistNetwork():
     r = None
     while cv2.waitKey(33) < 0:
         ret, frame = capture.read()
-        # cv2.imshow('qr',frame)
-        print(frame)
-        break
+        cv2.imshow('fre',frame)
         decoded_data = decode(frame)
         if not len(decoded_data) == 0:
             r = str(decoded_data[0][0])

@@ -1,6 +1,10 @@
+import os
+import sys
+sys.path.append('/home/insam/Documents/Insam_Rasp')
 from controller.controller import Controller
 import drivers
 from typing import Union
+import asyncio
 
 class LcdDisplay(Controller, object):
     def __new__(cls, *args, **kwargs):
@@ -23,3 +27,9 @@ class LcdDisplay(Controller, object):
         self.display.lcd_display_extended_string(string1, 1)
         if string2:
             self.display.lcd_display_extended_string(string2, 2)
+    
+    async def five_second_clear(self):
+        await asyncio.sleep(5)
+        self.display.lcd_clear()
+        
+        

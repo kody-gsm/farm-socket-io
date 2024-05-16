@@ -2,7 +2,7 @@ from pyzbar.pyzbar import decode
 import cv2
 import os
 import sys
-sys.path.append('/home/kody/Documents/Insam_Rasp')
+sys.path.append('/home/insam/Documents/Insam_Rasp')
 from sensor.cam import CamSenSor
 
 def get_qr_info():
@@ -56,4 +56,4 @@ def connect_network():
 
     cv2.destroyAllWindows()
     
-connect_network()
+# connect_network()

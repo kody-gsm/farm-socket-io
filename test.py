@@ -15,8 +15,26 @@
 # with TempHumiSensor() as s:
 #     print(s.get_data())
 
+import RPi.GPIO as GPIO
+from controller import led
+from controller import pump
 import time
-import board
-import adafruit_dht
 
-dhtDevice = adafruit_dht.DHT11(board.D4)
+with led.Led() as l:
+	l.set(True)
+	time.sleep(2.0)
+
+with pump.Pump() as P:
+	print('gkgk')
+
+time.sleep(2.0)
+
+with led.Led() as l:
+	l.set(True)
+	time.sleep(2.0)
+
+with led.Led() as l:
+	l.set(False)
+	time.sleep(2.0)
+	
+GPIO.cleanup()

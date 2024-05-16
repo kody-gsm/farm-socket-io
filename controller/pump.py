@@ -36,7 +36,6 @@ class Pump(object):
         self.pwm:GPIO.PWM
     
     def __enter__(self):
-        GPIO.setmode(GPIO.BCM)
         GPIO.setup(ENA, GPIO.OUT)
         GPIO.setup(IN1, GPIO.OUT)   
         GPIO.setup(IN2, GPIO.OUT)
@@ -50,7 +49,9 @@ class Pump(object):
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.stop()
-        GPIO.cleanup()
+        GPIO.setup(ENA, GPIO.IN)
+        GPIO.setup(IN1, GPIO.IN)   
+        GPIO.setup(IN2, GPIO.IN)
 
             
     def stop(self, speed = 80):
