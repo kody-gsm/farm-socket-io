@@ -21,6 +21,6 @@ async def feed_water():
                     pump.work(50)
                     await asyncio.sleep(0.5)
                     pump.stop()
-                    await asyncio.sleep(0.5)
+                    await asyncio.sleep(1)
 
 # sched.start()
