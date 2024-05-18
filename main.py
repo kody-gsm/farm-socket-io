@@ -1,76 +1,31 @@
-import os
-import subprocess
-
+from controller import lcd
 from controller import led
 from controller import pump
-from controller import lcd
 from sensor import cam
 from sensor import sensor
 from sensor import soil_humi
 from sensor import temp_humi
 from sensor import water_level
-from utils import r_qr
-from utils import get_mac
-
-import asyncio, websockets, drivers
+import asyncio, websockets
 
 import typing
-
-import RPi.GPIO as GPIO
-
 SOCKET:websockets.WebSocketClientProtocol
 
 SERVER_URL = "ws://insam-api.dodojini.shop/pot/connect"
 
 async def main():
-    
-    GPIO.setmode(GPIO.BCM)
-
-    display=lcd.LcdDisplay()
-    
-    hostname="8.8.8.8"
-    POT_ID= 'sds'
-    response= 0
-    
-    with open(os.devnull, 'w') as dev:
-        try:
-            subprocess.check_call(
-                ['ping', '-c','1', hostname],
-                stdout=dev,
-                stderr=dev
-            )
-            response = 1
-        except subprocess.CalledProcessError:
-            response = 0
-
-    display.set("Checking Network")
-        
-    if response== 1:
-        display.set("Network is", "Enabled")
-        asyncio.create_task(display.five_second_clear())
-        
-        # socket 연결
-        try:
-            async with websockets.connect(SERVER_URL, extra_headers={"pot_code":POT_ID}) as socket:
-                print('test')
-                global SOCKET
-                SOCKET = socket
-                while True:
-                    msg = await socket.recv()
-                    print(msg)
-                    await msg_switch(msg)
-                    
-        except Exception as e:
-            os.system("reboot")
-        
-        finally:
-            GPIO.cleanup()
-    
-    else:
-        display.set("Ready to regist", "Network with QR")
-        r_qr.connect_network()
-
-
+    # socket 연결
+    try:
+        async with websockets.connect(SERVER_URL, extra_headers={"pot_code":"sds"}) as socket:
+            global SOCKET
+            SOCKET = socket
+            while True:
+                msg = await socket.recv()
+                print(msg)
+                await msg_switch(msg)
+                
+    except websockets.ConnectionClosedOK:
+        print("socket end")
 
 send_cam_task:typing.Union[asyncio.Task, None] = None
 
@@ -97,9 +52,9 @@ async def msg_switch(msg:str):
         elif msg[1] == "3": # pump
             cmd = controll_pump
 
-    elif msg[0] == "s": # 설정
-        if msg[1] == "1": # 미정
-            pass
+    elif msg[0] == "v": # 설정
+        if msg[1] == "1": # 습도 지정
+            cmd = v_set_humi
 
     elif msg[0] == "t":
         if msg[1] == "1":
@@ -120,9 +75,9 @@ async def msg_switch(msg:str):
 
 
 async def send_temp_humi(id, details):
-    s = temp_humi.TempHumiSensor()
-    data = s.get_data()
-    await SOCKET.send(id+"#s1:"+str(data))
+    with temp_humi.TempHumiSensor() as s:
+        data = s.get_data()
+        await SOCKET.send(id+"#s1:"+str(data))
 
 async def send_soil_humi(id, details):
     with soil_humi.SoilHumiSensor() as s:
@@ -204,6 +159,10 @@ async def test_2(id, details):
 
         await SOCKET.send(id+"#stop")
     print(send_cam_task)
+
+async def v_set_humi(id, details):
+    with open("setting.txt", "w") as f:
+        f.write(f"humi={details}")
 
 
 # async def control_led(detail):
