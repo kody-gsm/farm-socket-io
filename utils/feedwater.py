@@ -19,7 +19,7 @@ async def feed_water():
                     if int(water_level.get_data()) < 10:
                         break
                     pump.work(50)
-                    await asyncio.sleep(0.5)
+                    await asyncio.sleep(1)
                     pump.stop()
                     await asyncio.sleep(1)
 
