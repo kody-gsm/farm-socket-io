@@ -67,6 +67,12 @@ class Pump(object):
         else:
             GPIO.output(IN1, HIGH)
             GPIO.output(IN2, LOW)
+
+    def set(self, speed = 50, is_stop=False, is_backword=False):
+        if is_stop:
+            self.stop(speed)
+        else:
+            self.work(speed, is_backword)
         
 # with Pump() as pump:
 #     pump.work()
