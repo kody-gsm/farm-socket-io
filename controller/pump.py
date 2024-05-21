@@ -59,20 +59,20 @@ class Pump(object):
         GPIO.output(IN1, LOW)
         GPIO.output(IN2, LOW)
 
-    def work(self, speed = 30, is_backword = False):
+    def work(self, speed = 30, reverse = False):
         self.pwm.ChangeDutyCycle(speed) 
-        if is_backword:
+        if reverse:
             GPIO.output(IN1, LOW)
             GPIO.output(IN2, HIGH)
         else:
             GPIO.output(IN1, HIGH)
             GPIO.output(IN2, LOW)
 
-    def set(self, speed = 50, is_stop=False, is_backword=False):
+    def set(self, speed = 50, is_stop=False, reverse=False):
         if is_stop:
             self.stop(speed)
         else:
-            self.work(speed, is_backword)
+            self.work(speed, reverse)
         
 # with Pump() as pump:
 #     pump.work()

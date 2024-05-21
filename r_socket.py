@@ -46,11 +46,11 @@ async def msg_switch(msg:str):
 
     elif msg[0] == "c": # 컨트롤러
         if msg[1] == "1": # led
-            cmd = controll_led
+            cmd = control_led
         elif msg[1] == "2": # lcd
-            cmd = controll_lcd
+            cmd = control_lcd
         elif msg[1] == "3": # pump
-            cmd = controll_pump
+            cmd = control_pump
 
     elif msg[0] == "v": # 설정
         if msg[1] == "1": # 습도 지정
@@ -111,7 +111,7 @@ async def send_cam(id, details):
             data = s.get_data()
             await SOCKET.send(id+"#s4:"+data)
 
-async def controll_led(id, detail):
+async def control_led(id, detail):
     with led.Led() as c:
         if detail == "True":  
             c.set(light=True)
@@ -119,7 +119,7 @@ async def controll_led(id, detail):
             c.set(light=False)
     await SOCKET.send(id+"#c1:set")
 
-async def controll_lcd(id, detail):
+async def control_lcd(id, detail):
     with lcd.LcdDisplay() as c:
         sli = detail.split("|")
         if len(sli) == 1:
@@ -128,11 +128,14 @@ async def controll_lcd(id, detail):
             c.set(sli[0], sli[1])
     await SOCKET.send(id+"#c2:set")
     
-async def controll_pump(id, detail):
+async def control_pump(id, detail):
     try:
         with pump.Pump() as c:
-            sli = detail.split("|")         
-            c.work(int(sli[1]))
+            sli = detail.split("|")
+            if len(sli) == 2:         
+                c.work(int(sli[1]))
+            else:         
+                c.work()
             await SOCKET.send(id+"#s4:set start")
             await asyncio.sleep(int(sli[0]))
             c.stop()
