@@ -1,10 +1,7 @@
 import spidev
-import sys
 import math
-sys.path.append('/home/kody/Documents/insam/sensor')
-from sensor.sensor import Sensor
 
-class WaterLevelSenSor(Sensor, object):
+class WaterLevelSenSor(object):
     def __new__(cls, *args, **kwargs):
         if not hasattr(cls, "_instance"):
             cls._instance = super().__new__(cls)
@@ -18,7 +15,7 @@ class WaterLevelSenSor(Sensor, object):
         return 100.0-round(((data*100)/float(1023)),1)
     
     def __enter__(self):
-        self.spi.open(1,0)
+        self.spi.open(0,0)
         self.spi.max_speed_hz = 1000000 
         self.spi.mode = 0
         return self
@@ -35,8 +32,17 @@ class WaterLevelSenSor(Sensor, object):
 
     def get_data(self):
         val = self.__readChannel(0)
+        print(val)
         if (val != 0) : # filtering for meaningless num
             return str(round(math.ceil(self.__convertPercent(val)*100*2.8)/100*21)/10) #2.8 for compliment
         else:
-            return Exception("err")
+            raise Exception("err")
         
+
+
+
+import time
+with WaterLevelSenSor() as wls:
+    while True:
+        print(wls.get_data())
+        time.sleep(1)

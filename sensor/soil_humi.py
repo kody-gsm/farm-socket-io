@@ -1,11 +1,7 @@
-import sys
-sys.path.append('/home/kody/Documents/insam/sensor')
-
-from sensor.sensor import Sensor
 import spidev
 import math
 
-class SoilHumiSensor(Sensor, object):
+class SoilHumiSensor(object):
     def __new__(cls, *args, **kwargs):
         if not hasattr(cls, "_instance"):
             cls._instance = super().__new__(cls)
@@ -16,7 +12,7 @@ class SoilHumiSensor(Sensor, object):
         self.spi:spidev.SpiDev
 
     def __enter__(self):
-        self.spi.open(1,0)
+        self.spi.open(0,0)
         self.spi.max_speed_hz = 1000000 
         return self
 
@@ -38,5 +34,10 @@ class SoilHumiSensor(Sensor, object):
         else:
             raise Exception("err")
 
-# with SoilHumiSensor() as s1:s
+
+import time
+with SoilHumiSensor() as soil:
+    while True:
+        print(soil.get_data())
+        time.sleep(1)
     

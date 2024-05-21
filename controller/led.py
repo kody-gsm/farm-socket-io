@@ -1,5 +1,4 @@
 import RPi.GPIO as GPIO
-import time
 
 class Led(object):
     PIN_NUMBER = 14
@@ -27,7 +26,11 @@ class Led(object):
             GPIO.output(Led.PIN_NUMBER, 0)
 
 
-GPIO.setmode(GPIO.BCM)
-with Led() as led:
-    led.set(False)
-    time.sleep(5)
+# import time
+# GPIO.setmode(GPIO.BCM)
+# with Led() as led:
+#     while True:
+#         led.set(False)
+#         time.sleep(1)
+#         led.set(True)
+#         time.sleep(1)

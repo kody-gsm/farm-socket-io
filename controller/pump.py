@@ -1,6 +1,5 @@
 # from controller.controller import Controller
 import RPi.GPIO as GPIO
-from time import sleep
 
 STOP  = 0
 FORWARD  = 1
@@ -67,7 +66,11 @@ class Pump(object):
         else:
             GPIO.output(IN1, HIGH)
             GPIO.output(IN2, LOW)
-        
-# with Pump() as pump:
-#     pump.work()
-#     sleep(3)
+
+
+from time import sleep
+GPIO.setmode(GPIO.BCM)        
+with Pump() as pump:
+    pump.work()
+    sleep(2)
+    pump.stop()
