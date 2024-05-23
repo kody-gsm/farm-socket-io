@@ -35,9 +35,9 @@ class SoilHumiSensor(object):
             raise Exception("err")
 
 
-import time
-with SoilHumiSensor() as soil:
-    while True:
-        print(soil.get_data())
-        time.sleep(1)
+# import time
+# with SoilHumiSensor() as soil:
+#     while True:
+#         print(soil.get_data())
+#         time.sleep(1)
     

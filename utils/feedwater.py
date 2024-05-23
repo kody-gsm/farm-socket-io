@@ -6,7 +6,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 
 sched = BackgroundScheduler(timezone='Asia/Seoul')
 
-@sched.scheduled_job(trigger="corn", hour='12',minute='00', id='feed_water')
+@sched.scheduled_job(trigger="cron", hour='12',minute='00', id='feed_water')
 async def feed_water():
     with SoilHumiSensor() as soil_humi:
         with WaterLevelSenSor() as water_level:
@@ -19,7 +19,8 @@ async def feed_water():
                     if int(water_level.get_data()) < 10:
                         break
                     pump.work(50)
-                    await asyncio.sleep(0.5)
+                    await asyncio.sleep(1)
                     pump.stop()
+                    await asyncio.sleep(1)
 
 # sched.start()

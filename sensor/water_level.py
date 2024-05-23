@@ -41,8 +41,8 @@ class WaterLevelSenSor(object):
 
 
 
-import time
-with WaterLevelSenSor() as wls:
-    while True:
-        print(wls.get_data())
-        time.sleep(1)
+# import time
+# with WaterLevelSenSor() as wls:
+#     while True:
+#         print(wls.get_data())
+#         time.sleep(1)
