@@ -6,7 +6,13 @@ from sensor import sensor
 from sensor import soil_humi
 from sensor import temp_humi
 from sensor import water_level
+from utils import r_qr
+from utils import get_mac
 import asyncio, websockets
+
+import RPi.GPIO as GPIO
+import subprocess
+import os
 
 import typing
 SOCKET:websockets.WebSocketClientProtocol
@@ -15,7 +21,31 @@ SERVER_URL = "ws://insam-api.dodojini.shop/pot/connect"
 
 async def main():
     # socket 연결
-    try:
+    GPIO.setmode(GPIO.BCM)
+
+    display = lcd.LcdDisplay()
+
+    hostname = "8.8.8.8"
+    POT_ID = 'sds'
+    response = 0
+
+    with open(os.devnull, 'w') as dev:
+        try:
+            subprocess.check_call(
+                ['ping', '-c', '1', hostname],
+                stdout=dev,
+                stderr=dev
+            )
+            response = 1
+        except subprocess.CalledProcessError:
+            response = 0
+
+    display.set("Checking Network")
+
+    if response == 1:
+        display.set("Network is", "Enabled")
+        asyncio.create_task(display.five_second_clear())
+
         async with websockets.connect(SERVER_URL, extra_headers={"pot_code":"sds"}) as socket:
             global SOCKET
             SOCKET = socket
@@ -23,9 +53,10 @@ async def main():
                 msg = await socket.recv()
                 print(msg)
                 await msg_switch(msg)
-                
-    except websockets.ConnectionClosedOK:
-        print("socket end")
+
+    else:
+        display.set("Ready to regist", "Network with QR")
+        r_qr.connect_network()
 
 send_cam_task:typing.Union[asyncio.Task, None] = None
 
