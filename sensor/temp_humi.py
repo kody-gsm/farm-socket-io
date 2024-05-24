@@ -12,6 +12,15 @@ class TempHumiSensor(object):
     
     def __init__(self) -> None:
         self.dhtDevice:adafruit_dht.DHT11
+        
+    def __enter__(self):
+        try:
+            return self
+        finally:
+            pass
+        
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        pass
 
     def get_data(self):
         try:
@@ -20,8 +29,7 @@ class TempHumiSensor(object):
             humidity = self.dhtDevice.humidity
             return temperature_c, humidity
         except RuntimeError as error:
-            print(error)
-            return Exception("err.",error)
+            raise Exception("err.",error)
         
 
 # import time

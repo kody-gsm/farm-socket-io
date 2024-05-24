@@ -10,7 +10,9 @@ def get_qr_info():
         # 시간초과 넣어야함
         while True: 
             data = cam.get_data(is_base64=False)
-            # if data != None:
+            if data == None:
+                print(data)
+                continue
             decoded_data = decode(data)
             if not len(decoded_data) == 0:
                 r = str(decoded_data[0][0])

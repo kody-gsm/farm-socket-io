@@ -1,10 +1,8 @@
 import cv2
 import base64
-
-from sensor.sensor import Sensor
 import spidev
 
-class CamSenSor(Sensor, object):
+class CamSenSor(object):
     def __new__(cls, *args, **kwargs):
         if not hasattr(cls, "_instance"):
             cls._instance = super().__new__(cls)
@@ -18,13 +16,14 @@ class CamSenSor(Sensor, object):
             if not cv2.waitKey(33) < 0:
                 raise Exception("fail waitkey is small")
             self.cam = cv2.VideoCapture(0)
-            if not self.cam.isOpened():
-                raise Exception("can't get camera")
+            print(self.cam.isOpened())
             self.cam.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
             self.cam.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+            if not self.cam.isOpened():
+                raise Exception("can't get camera")
             return self
         except:
-            return Exception("fail why?")
+            raise Exception("fail why?")
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.cam.release()

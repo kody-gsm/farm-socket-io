@@ -23,10 +23,10 @@ async def main():
     # socket 연결
     GPIO.setmode(GPIO.BCM)
 
-    display = lcd.LcdDisplay()
+    #display = lcd.LcdDisplay()
 
     hostname = "8.8.8.8"
-    POT_ID = 'sds'
+    POT_ID = get_mac.get_mac()
     response = 0
 
     with open(os.devnull, 'w') as dev:
@@ -40,13 +40,13 @@ async def main():
         except subprocess.CalledProcessError:
             response = 0
 
-    display.set("Checking Network")
+    #display.set("Checking Network")
 
     if response == 1:
-        display.set("Network is", "Enabled")
-        asyncio.create_task(display.five_second_clear())
-
-        async with websockets.connect(SERVER_URL, extra_headers={"pot_code":"sds"}) as socket:
+        #display.set("Network is", "Enabled")
+        #asyncio.create_task(display.five_second_clear())
+        print(POT_ID)
+        async with websockets.connect(SERVER_URL, extra_headers={"pot_code":POT_ID}) as socket:
             global SOCKET
             SOCKET = socket
             while True:
@@ -55,7 +55,7 @@ async def main():
                 await msg_switch(msg)
 
     else:
-        display.set("Ready to regist", "Network with QR")
+        #display.set("Ready to regist", "Network with QR")
         r_qr.connect_network()
 
 send_cam_task:typing.Union[asyncio.Task, None] = None
@@ -100,7 +100,6 @@ async def msg_switch(msg:str):
         task = asyncio.create_task(cmd(id, detail))
 
         if msg == "s4:stream" or msg == "t2:stream":
-            print(1)
             global send_cam_task
             send_cam_task = task
 
@@ -113,18 +112,17 @@ async def send_temp_humi(id, details):
 async def send_soil_humi(id, details):
     with soil_humi.SoilHumiSensor() as s:
         data = s.get_data()
-        await SOCKET.send(id+"#s2:"+data)
+        await SOCKET.send(id+"#s2:"+str(data))
 
 async def send_water_level(id, details):
     with water_level.WaterLevelSenSor() as s:
         data = s.get_data()
-        await SOCKET.send(id+"#s3:"+data)
+        await SOCKET.send(id+"#s3:"+str(data))
 
 async def send_cam(id, details):
     global send_cam_task
     print(send_cam_task)
     if details == "stream":
-        print("asd")
         with cam.CamSenSor() as s:
             await SOCKET.send(id+"#s4:stream")
             while True:
@@ -137,7 +135,6 @@ async def send_cam(id, details):
         send_cam_task.cancel()
         await SOCKET.send(id+"#s4:stop")
     else:
-        print("dksl")
         with cam.CamSenSor() as s:
             data = s.get_data()
             await SOCKET.send(id+"#s4:"+data)
@@ -173,26 +170,8 @@ async def control_pump(id, detail):
             await SOCKET.send(id+"#s4:set end")
     except:
         await SOCKET.send(id+"#c1:fail")
+        
 
-async def test_1(id, details):
-    await SOCKET.send(id+"#good")
-
-async def test_2(id, details):
-    global send_cam_task
-    print(send_cam_task)
-    if details == "stream":
-        await SOCKET.send(id+"#start")
-
-        while True:
-            await SOCKET.send(id+"#test")
-            await asyncio.sleep(1)
-    elif details == "stop":
-        if not send_cam_task:
-            raise "task is None"
-        send_cam_task.cancel()
-
-        await SOCKET.send(id+"#stop")
-    print(send_cam_task)
 
 async def v_set_humi(id, details):
     with open("setting.txt", "w") as f:

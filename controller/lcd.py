@@ -1,12 +1,8 @@
-import os
-import sys
-sys.path.append('/home/insam/Documents/Insam_Rasp')
-from controller.controller import Controller
 import drivers
 from typing import Union
 import asyncio
 
-class LcdDisplay(Controller, object):
+class LcdDisplay(object):
     def __new__(cls, *args, **kwargs):
         if not hasattr(cls, "_instance"):
             cls._instance = super().__new__(cls)
