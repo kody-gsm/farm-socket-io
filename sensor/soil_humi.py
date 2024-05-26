@@ -32,7 +32,7 @@ class SoilHumiSensor(object):
         if val != 0 : # filtering for meaningless num
             return math.ceil(self.__convertPercent(val)*100)/100
         else:
-            raise Exception("err")
+            return 0
 
 
 # import time

@@ -36,7 +36,7 @@ class WaterLevelSenSor(object):
         if (val != 0) : # filtering for meaningless num
             return str(round(math.ceil(self.__convertPercent(val)*100*2.8)/100*21)/10) #2.8 for compliment
         else:
-            raise Exception("err")
+            return '0'
         
 
 

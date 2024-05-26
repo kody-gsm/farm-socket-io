@@ -16,7 +16,8 @@ class Led(object):
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        GPIO.setup(Led.PIN_NUMBER, GPIO.IN)
+        #GPIO.setup(Led.PIN_NUMBER, GPIO.IN)
+        pass
 
     def set(self, light:bool):
         self.status = light
@@ -26,11 +27,9 @@ class Led(object):
             GPIO.output(Led.PIN_NUMBER, 0)
 
 
-#import time
-#GPIO.setmode(GPIO.BCM)
-#with Led() as led:
-#    while True:
-#        led.set(False)
-#        time.sleep(1)
-#        led.set(True)
-#        time.sleep(1)
+import time
+GPIO.setmode(GPIO.BCM)
+with Led() as led:
+    while True:
+        led.set(True)
+        time.sleep(1)
