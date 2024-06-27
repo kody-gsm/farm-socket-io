@@ -6,7 +6,6 @@ import time
 
 async def main():
     sched.start()
-
     # internet 연결
 
     #try:

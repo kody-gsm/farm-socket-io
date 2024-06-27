@@ -27,9 +27,9 @@ class Led(object):
             GPIO.output(Led.PIN_NUMBER, 0)
 
 
-import time
-GPIO.setmode(GPIO.BCM)
-with Led() as led:
-    while True:
-        led.set(True)
-        time.sleep(1)
+# import time
+# GPIO.setmode(GPIO.BCM)
+# with Led() as led:
+#     while True:
+#         led.set(True)
+#         time.sleep(1)

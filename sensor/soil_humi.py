@@ -28,7 +28,7 @@ class SoilHumiSensor(object):
         return 100.0-round(((data*100)/float(1023)),1)
     
     def get_data(self):
-        val = self.__readChannel(1)
+        val = self.__readChannel(0)
         if val != 0 : # filtering for meaningless num
             return math.ceil(self.__convertPercent(val)*100)/100
         else:
