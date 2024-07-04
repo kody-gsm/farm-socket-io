@@ -32,7 +32,6 @@ class WaterLevelSenSor(object):
 
     def get_data(self):
         val = self.__readChannel(1)
-        print(val)
         if (val != 0) : # filtering for meaningless num
             return str(round(math.ceil(self.__convertPercent(val)*100*2.8)/100*21)/10) #2.8 for compliment
         else:

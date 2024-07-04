@@ -23,7 +23,7 @@ async def main():
     # socket 연결
     GPIO.setmode(GPIO.BCM)
 
-    #display = lcd.LcdDisplay()
+    display = lcd.LcdDisplay()
 
     hostname = "8.8.8.8"
     POT_ID = get_mac.get_mac()
@@ -40,12 +40,12 @@ async def main():
         except subprocess.CalledProcessError:
             response = 0
 
-    #display.set("Checking Network")
+    display.set("Checking Network")
 
     if response == 1:
-        #display.set("Network is", "Enabled")
-        #asyncio.create_task(display.five_second_clear())
+        display.set("Network is", "Enabled")
         print(POT_ID)
+        display.set("Pot ID", POT_ID)
         async with websockets.connect(SERVER_URL, extra_headers={"pot_code":POT_ID}) as socket:
             global SOCKET
             SOCKET = socket
@@ -53,9 +53,13 @@ async def main():
                 msg = await socket.recv()
                 print(msg)
                 await msg_switch(msg)
+                with water_level.WaterLevelSenSor() as w,soil_humi.SoilHumiSensor() as s:
+                    water = float(w.get_data()) / 3.0
+                    soil = s.get_data()
+                    display.set("water :"+str(water)[:5], "soil : "+str(soil))
 
     else:
-        #display.set("Ready to regist", "Network with QR")
+        display.set("Ready to regist", "Network with QR")
         r_qr.connect_network()
 
 send_cam_task:typing.Union[asyncio.Task, None] = None
