@@ -88,7 +88,7 @@ async def msg_switch(msg:str):
         elif msg[1] == "2": # lcd
             cmd = control_lcd
         elif msg[1] == "3": # pump
-            cmd = control_pump
+            cmd = set_soil
 
     elif msg[0] == "v": # 설정
         if msg[1] == "1": # 습도 지정
@@ -110,6 +110,11 @@ async def msg_switch(msg:str):
             global send_cam_task
             send_cam_task = task
             
+async def set_soil(id, details):
+    with open("setting.txt", "w") as f:
+        f.write("humi="+details)
+    f.close()
+
 async def feed_water():
     with Pump() as pump:
         with soil_humi.SoilHumiSensor() as s, water_level.WaterLevelSenSor() as w:
