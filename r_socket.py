@@ -43,7 +43,7 @@ async def main():
     display.set("Checking Network")
 
     if response == 1:
-        display.set("Network is", "Enabled")
+        #display.set("Network is", "Enabled")
         print(POT_ID)
         display.set("Pot ID", POT_ID)
         async with websockets.connect(SERVER_URL, extra_headers={"pot_code":POT_ID}) as socket:
@@ -78,6 +78,8 @@ async def msg_switch(msg:str):
             cmd = send_water_level
         elif msg[1] == "4": # 카메라
             cmd = send_cam
+        elif msg[1] == "5":
+            cmd = send_led
 
     elif msg[0] == "c": # 컨트롤러
         if msg[1] == "1": # led
@@ -99,7 +101,7 @@ async def msg_switch(msg:str):
     
     if cmd:
         detail = None
-        if len(msg) > 3:
+        if len(msg) != 4:
             detail = msg[3:]
         task = asyncio.create_task(cmd(id, detail))
 
@@ -122,6 +124,10 @@ async def send_water_level(id, details):
     with water_level.WaterLevelSenSor() as s:
         data = s.get_data()
         await SOCKET.send(id+"#s3:"+str(data))
+        
+async def send_led(id, details):
+    with led.Led() as c:
+        await SOCKET.send(id+"#s5:"+str(c.get()))
 
 async def send_cam(id, details):
     global send_cam_task

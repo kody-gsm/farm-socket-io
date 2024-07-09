@@ -25,6 +25,8 @@ class Led(object):
             GPIO.output(Led.PIN_NUMBER, 1)
         else:
             GPIO.output(Led.PIN_NUMBER, 0)
+    def get(self):
+        return self.status
 
 
 # import time
