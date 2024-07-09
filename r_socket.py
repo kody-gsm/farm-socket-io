@@ -1,6 +1,6 @@
 from controller import lcd
 from controller import led
-from controller import pump
+from controller.pump import Pump
 from sensor import cam
 from sensor import sensor
 from sensor import soil_humi
@@ -21,6 +21,7 @@ SERVER_URL = "ws://insam-api.dodojini.shop/pot/connect"
 
 async def main():
     # socket 연결
+    GPIO.cleanup()
     GPIO.setmode(GPIO.BCM)
 
     display = lcd.LcdDisplay()
@@ -57,7 +58,7 @@ async def main():
                     water = float(w.get_data()) / 3.0
                     soil = s.get_data()
                     display.set("water :"+str(water)[:5], "soil : "+str(soil))
-
+                await feed_water()
     else:
         display.set("Ready to regist", "Network with QR")
         r_qr.connect_network()
@@ -108,7 +109,16 @@ async def msg_switch(msg:str):
         if msg == "s4:stream" or msg == "t2:stream":
             global send_cam_task
             send_cam_task = task
-
+            
+async def feed_water():
+    with Pump() as pump:
+        with soil_humi.SoilHumiSensor() as s, water_level.WaterLevelSenSor() as w:
+            with open("setting.txt", "r") as f:
+                humi = float(f.readline()[5:])
+                if (s.get_data() < humi and float(w.get_data()) > 50):
+                    pump.work(50)
+                    await asyncio.sleep(1)
+                    pump.stop()
 
 async def send_temp_humi(id, details):
     with temp_humi.TempHumiSensor() as s:

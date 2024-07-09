@@ -42,15 +42,14 @@ class Pump(object):
         self.pwm = GPIO.PWM(ENA, 100) 
         # 우선 PWM 멈춤.   
         self.pwm.start(0) 
-
-        sleep(1)
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.stop()
-        GPIO.setup(ENA, GPIO.IN)
-        GPIO.setup(IN1, GPIO.IN)   
-        GPIO.setup(IN2, GPIO.IN)
+        self.pwm.stop()
+        GPIO.cleanup(IN1)
+        GPIO.cleanup(IN2)
+        GPIO.cleanup(ENA)
 
             
     def stop(self, speed = 80):
