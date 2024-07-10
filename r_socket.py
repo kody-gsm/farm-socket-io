@@ -51,14 +51,17 @@ async def main():
             global SOCKET
             SOCKET = socket
             while True:
-                msg = await socket.recv()
-                print(msg)
-                await msg_switch(msg)
-                with water_level.WaterLevelSenSor() as w,soil_humi.SoilHumiSensor() as s:
-                    water = float(w.get_data()) / 3.0
-                    soil = s.get_data()
-                    display.set("water :"+str(water)[:5], "soil : "+str(soil))
-                await feed_water()
+                try:
+                    with water_level.WaterLevelSenSor() as w,soil_humi.SoilHumiSensor() as s:
+                        water = float(w.get_data()) / 3.0
+                        soil = s.get_data()
+                        display.set("water :"+str(water)[:5], "soil : "+str(soil))
+                    await feed_water()
+                    msg = await socket.recv()
+                    print(msg)
+                    await msg_switch(msg)
+                except e:
+                    print('err')
     else:
         display.set("Ready to regist", "Network with QR")
         r_qr.connect_network()
@@ -81,6 +84,8 @@ async def msg_switch(msg:str):
             cmd = send_cam
         elif msg[1] == "5":
             cmd = send_led
+        elif msg[1] == "6":
+            cmd = get_target_soil
 
     elif msg[0] == "c": # 컨트롤러
         if msg[1] == "1": # led
@@ -114,6 +119,11 @@ async def set_soil(id, details):
     with open("setting.txt", "w") as f:
         f.write("humi="+details)
     f.close()
+    
+async def get_target_soil(id, details):
+    with open("setting.txt", "r") as f:
+        data = float(f.readline()[5:])
+        await SOCKET.send(id+"#s6:"+str(data))
 
 async def feed_water():
     with Pump() as pump:
@@ -148,12 +158,12 @@ async def send_cam(id, details):
     global send_cam_task
     print(send_cam_task)
     if details == "stream":
-        with cam.CamSenSor() as s:
-            await SOCKET.send(id+"#s4:stream")
-            while True:
+        await SOCKET.send(id+"#s4:stream")
+        while True:
+            with cam.CamSenSor() as s:
                 data = s.get_data()
                 await SOCKET.send(id+"#s4:"+data)
-                await asyncio.sleep(0.5)
+            await asyncio.sleep(0.5)
     elif details == "stop":
         if not send_cam_task:
             raise "task is None"

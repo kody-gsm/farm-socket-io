@@ -16,7 +16,6 @@ class CamSenSor(object):
             if not cv2.waitKey(33) < 0:
                 raise Exception("fail waitkey is small")
             self.cam = cv2.VideoCapture(0)
-            print(self.cam.isOpened())
             self.cam.set(cv2.CAP_PROP_FRAME_WIDTH, 320)
             self.cam.set(cv2.CAP_PROP_FRAME_HEIGHT, 240)
             if not self.cam.isOpened():
